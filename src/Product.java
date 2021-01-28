@@ -1,3 +1,6 @@
+// Nadia Ahmed 101172713 //
+// Esraa Alaa Eldin //
+
 public class Product {
     private String name;
     private String id;
