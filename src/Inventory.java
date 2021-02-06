@@ -1,5 +1,5 @@
 // Nadia Ahmed 101172713 //
-// Esraa Alaa Eldin //
+// Esraa Alaa Aldeen //
 
 public class Inventory {
     Product product; // ?? array of products matched to their id
