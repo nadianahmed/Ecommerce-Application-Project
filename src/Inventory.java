@@ -6,6 +6,8 @@ public class Inventory {
     String type;
     int stock;
 
+    //hello i made change
+
     /** Change to protected ? only StoreManager should access */
     public int getStock() {
         return stock;
