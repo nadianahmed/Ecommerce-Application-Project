@@ -1,10 +1,10 @@
 // Nadia Ahmed 101172713 //
-// Esraa Alaa Aldeen //
+// Esraa Alaa Aldeen 101151604//
 
 public class Product {
-    private String name;
-    private String id;
-    private double price;
+    private final String name;
+    private final String id;
+    private final double price;
 
     public Product(String name, String id, double price) {
         this.name = name;
