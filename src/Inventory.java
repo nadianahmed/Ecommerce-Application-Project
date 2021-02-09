@@ -22,17 +22,9 @@ public class Inventory {
 
     /** Checks if product is in inventory, given ID */
     private boolean inInventory(String id) {
-        for (int i = 0; i < productStocks.size(); i++) {
-            String productID = productStocks.get(i).getProductID();
-            if (productID.equals(id)); { return true; }
-        } return false;
-    }
-
-    /** Checks if product is in inventory, given Product */
-    private boolean inInventory(Product product) {
-        for (int i = 0; i < productStocks.size(); i++) {
-            String productID = productStocks.get(i).getProductID();
-            if (productID.equals(product.getId())); { return true; }
+        for (ProductStock productStock : productStocks) {
+            String productID = productStock.getProductID();
+            if (productID.equals(id)) { return true; }
         } return false;
     }
 
@@ -41,14 +33,6 @@ public class Inventory {
         for (int i = 0; i < productStocks.size(); i++) {
             String productID = productStocks.get(i).getProductID();
             if (productID.equals(id)); { return i; }
-        } return -1;
-    }
-
-    /** Finds index i of product that is in inventory, given Product */
-    private int findPlace(Product item) {
-        for (int i = 0; i < productStocks.size(); i++) {
-            String productID = productStocks.get(i).getProductID();
-            if (productID.equals(item.getId())); { return i; }
         } return -1;
     }
 
