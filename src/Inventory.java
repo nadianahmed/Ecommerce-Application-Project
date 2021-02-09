@@ -4,75 +4,95 @@
 import java.util.ArrayList;
 
 public class Inventory {
-    private ArrayList<Product> products;
-    private ArrayList<Integer> quantities;
 
+    private ArrayList<ProductStock> productStocks;
 
-    public Inventory(ArrayList<Product> products, ArrayList<Integer> quantity) {
-        this.products = products;
-        this.quantities = quantity;
+    /** Initializing Inventory */
+    protected Inventory(ArrayList<ProductStock> productStocks) {
+        this.productStocks = productStocks;
     }
 
-    public Inventory() { this(new ArrayList<>(), new ArrayList<>()); }      // ASK is this initializing inventory?
+    protected Inventory() { this(new ArrayList<>()); }
 
+    /** Private helper method to add new products */
     private void addProduct(Product product, int quantity) {
-        products.add(product);
         if (quantity < 0) { quantity = 0; }
-        quantities.add(quantity);
+        productStocks.add(new ProductStock(product, quantity));
     }
 
+    /** Checks if product is in inventory, given ID */
     private boolean inInventory(String id) {
-        for (Product product : products) {
-            if (product.getId().equals(id)) { return true; }
-        }
-        return false;
+        for (int i = 0; i < productStocks.size(); i++) {
+            String productID = productStocks.get(i).getProductID();
+            if (productID.equals(id)); { return true; }
+        } return false;
     }
 
-    private int findPlace(String id) {                                     //Assume product exists in inventory
-        for (Product product : products) {
-            if (product.getId().equals(id)) { return products.indexOf(product); }
+    /** Checks if product is in inventory, given Product */
+    private boolean inInventory(Product product) {
+        for (int i = 0; i < productStocks.size(); i++) {
+            String productID = productStocks.get(i).getProductID();
+            if (productID.equals(product.getId())); { return true; }
+        } return false;
+    }
+
+    /** Finds index i of product that is in inventory, given ID */
+    private int findPlace(String id) {
+        for (int i = 0; i < productStocks.size(); i++) {
+            String productID = productStocks.get(i).getProductID();
+            if (productID.equals(id)); { return i; }
         } return -1;
     }
 
-    private int getQuantity(String id) {                                            // ASK do i need both?
+    /** Finds index i of product that is in inventory, given Product */
+    private int findPlace(Product item) {
+        for (int i = 0; i < productStocks.size(); i++) {
+            String productID = productStocks.get(i).getProductID();
+            if (productID.equals(item.getId())); { return i; }
+        } return -1;
+    }
+
+    /** Private gets quantity for a product, given its ID */
+    private int getQuantity(String id) {
         if (inInventory(id)) {
-            return (quantities.get(findPlace(id)));
+            int i = this.findPlace(id);
+            return (productStocks.get(i).getQuantity());
         } else {
             System.out.println("This product is not in our inventory.");            //temp for testing
-            return 0;
+            return -1;
         }
     }
 
+    /** Gets quantity for a product, given its ID */
     protected int getStock(String id) {
         return getQuantity(id);
     }
 
-    protected void addStock(String id, int addStock) {                              // ASK how to add new product
+    /** Adds to stock if in inventory, adds new product if not. Given Product and quantity */
+    protected void addStock(Product product, int quantity) {
+        removeStock(product.getId(), -quantity);
+    }
+
+    /** Removes stock given ID and less quantity */
+    protected void removeStock(String id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
-            Integer newStock = quantities.get(i) + addStock;                        // more readable or redundant??
-            System.out.println("Previous quantity: " + quantities.get(i));          // temp to test if values change
-            quantities.add(i, newStock);
-            System.out.println("Increased quantity: " + quantities.get(i));         // temp to test if values change
+            int newQuantity = productStocks.get(i).getQuantity() - quantity;                   // more readable or redundant??
+            if (newQuantity < 0) {
+                System.out.println("Insufficient inventory to complete.");
+            } else {
+                System.out.println("Previous quantity: " + productStocks.get(i).getQuantity());          // temp to test if values change
+                productStocks.get(i).setQuantity(newQuantity);
+                System.out.println("Current quantity: " + productStocks.get(i).getQuantity());         // temp to test if values change
+            }
         } else {
             System.out.println("This product is not in our inventory.");            //temp for testing
         }
     }
 
-    protected void removeStock(String id, int lessStock) {
-        if (inInventory(id)){
-            int i = findPlace(id);
-            Integer newStock = quantities.get(i) - lessStock;                       // more readable or redundant??
-            System.out.println("Previous quantity: " + quantities.get(i));          // temp to test if values change
-            quantities.add(i, newStock);
-            System.out.println("Decreased quantity: " + quantities.get(i));         // temp to test if values change
-        } else {
-            System.out.println("This product is not in our inventory.");            //temp for testing
-        }
-    }
-
-    protected void InfoProduct(String id){                                          // What is this supposed to do?
-
+    protected Product InfoProduct(String id){
+        int i = findPlace(id);
+        return productStocks.get(i).getProduct();
     }
 
 
