@@ -1,5 +1,6 @@
-// Nadia Ahmed 101172713 //
-// Esraa Alaa Aldeen 101151604//
+// Team Cup O' Java
+// Nadia Ahmed 101172713
+// Esraa Alaa Aldeen 101151604
 
 import java.util.ArrayList;
 
