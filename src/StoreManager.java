@@ -4,29 +4,25 @@
 public class StoreManager {
     private Inventory inventory;
 
-    public StoreManager() {
-        this.inventory = new Inventory();
+    public StoreManager(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public int getProductStock(Product product) {
         return inventory.getStock(product.getId());
     }
 
-
     public double processTransaction(int[][] shoppingCart) {
 
         for (int[] value : shoppingCart) {
-            if (value[1] > inventory.getStock(value[0])) {
-                return -1;
-            }
+            if (!inventory.inInventory(value[0])
+                    || value[1] > inventory.getStock(value[0])) { return -1; }
         }
-        int checkoutTotal = 0;
+        double checkoutTotal = 0;
         for (int[] ints : shoppingCart) {
             if (inventory.inInventory(ints[0])) {
                 checkoutTotal += inventory.getProductInfo(ints[0]).getPrice();
-                inventory.removeStock(ints[0], ints[0]);
-            } else {
-                return -1;
+                inventory.removeStock(ints[0], ints[1]);
             }
         }
         return checkoutTotal;
