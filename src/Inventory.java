@@ -72,7 +72,7 @@ public class Inventory {
 
     /** Adds to stock if in inventory, adds new product if not. Given Product and quantity */
     protected void addStock(Product product, int quantity) {                                             //THIS WORKS!!
-        if (inInventory(product.getId())) {
+        if (inInventory(product.getId())) {                                                               // why protected!!
             removeStock(product.getId(), -quantity);
         } else {
             addProduct(product, quantity);
