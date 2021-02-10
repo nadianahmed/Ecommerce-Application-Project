@@ -1,28 +1,30 @@
 // Nadia Ahmed 101172713 //
 // Esraa Alaa Aldeen 101151604//
 
-import java.util.ArrayList;
-
 public class Product {
     private final String name;
-    private final String id;
+    private final int id;
     private final double price;
 
-    protected Product(String name, String id, double price) {
+    /** Initializing Inventory */
+    protected Product(String name, int id, double price) {
         this.name = name;
         this.id = id;
         this.price = price;
     }
 
-    protected String getName() {
+    /** Name accessor */
+    public String getName() {
         return name;
     }
 
-    protected String getId() {
+    /** ID accessor */
+    public int getId() {
         return id;
     }
 
-    protected double getPrice() {
+    /** Price accessor */
+    public double getPrice() {
         return price;
     }
 }

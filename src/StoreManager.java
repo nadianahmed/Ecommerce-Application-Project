@@ -1,7 +1,7 @@
 // Nadia Ahmed 101172713 //
 // Esraa Alaa Aldeen 101151604//
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
 
 public class StoreManager {
     private Inventory inventory;
@@ -14,9 +14,15 @@ public class StoreManager {
         return inventory.getStock(product.getId());
     }
 
-    private boolean inventorySufficient(String id, int quantity) { return  (inventory.getStock(id) - quantity >= 0); }
 
-    public double shoppingCart(Arrays shoppingList) {
+    public double processTransaction(int[][] shoppingList) {
+        int checkoutTotal;
+        for (int i = 0; i < shoppingList.length; i++) {
+            if (inventory.inInventory(shoppingList[i][0])
+                    && shoppingList[i][1] >= inventory.getStock(shoppingList[i][0])) {
+                checkoutTotal += shoppingList[i][]
+            }
+        }
         return -1;
     }
 }
