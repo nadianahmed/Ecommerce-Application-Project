@@ -20,7 +20,7 @@ public class StoreManager {
         }
         double checkoutTotal = 0;
         for (int[] ints : shoppingCart) {
-            if (inventory.inInventory(ints[0])) {
+            if (inventory.inInventory(ints[0])) { //&& there is avalible stock 
                 checkoutTotal += inventory.getProductInfo(ints[0]).getPrice();
                 inventory.removeStock(ints[0], ints[1]);
             }
