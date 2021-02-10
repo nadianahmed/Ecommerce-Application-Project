@@ -11,12 +11,12 @@ public class ProductStock {
     /** Creates ProductStock wrapper given Product, sets quantity to zero */
     ProductStock(Product product) {this(product, 0); }
 
-    protected int getQuantity() { return quantity; }
+    public int getQuantity() { return quantity; }
 
-    protected Product getProduct() { return product; }
+    public Product getProduct() { return product; }
 
-    protected String getProductID() { return product.getId(); }
+    public int getProductID() { return product.getId(); }
 
-    protected void setQuantity(int quantity) {this.quantity = quantity; }
+    public void setQuantity(int quantity) {this.quantity = quantity; }
 
 }

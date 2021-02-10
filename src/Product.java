@@ -7,7 +7,7 @@ public class Product {
     private final double price;
 
     /** Initializing Inventory */
-    protected Product(String name, int id, double price) {
+    public Product(String name, int id, double price) {
         this.name = name;
         this.id = id;
         this.price = price;

@@ -15,11 +15,12 @@ public class Inventory {
     public Inventory() { this(new ArrayList<>()); }
 
     /** Private helper method to add new products */
-    private void addProduct(Product product, int quantity) {        //what if product is invalid
-        if (quantity < 1) { return; }
-        if (product.getPrice() < 0) { return; }
-        if (this.inInventory(product.getId())) { return; }          // if product exists, add quantity (not return)
-        productStocks.add(new ProductStock(product, quantity));
+    private void addProduct(Product product, int quantity) {
+        if (quantity >= 1                                            // Invalid if quantity less than 1
+                && !inInventory(product.getId())                     // Invalid if same ID product exists in inventory
+                && !(product.getPrice() < 0)) {                      // Invalid if price is negative
+            productStocks.add(new ProductStock(product, quantity));
+        } else return;                                                // Do nothing if invalid products
     }
 
     /** Checks if product is in inventory, given ID */
@@ -31,11 +32,10 @@ public class Inventory {
     }
 
     /** Finds index i of product that is in inventory, given ID */
-    private int findPlace(int id) {                                  // maybe change
-        for (int i = 0; i < productStocks.size(); i++) {
-            int productID = productStocks.get(i).getProductID();
-            if (productID == id); { return i; }
-        } return -1;
+    private int findPlace(int id) {
+        if (inInventory(id)) {
+            return productStocks.indexOf(id);
+        } else { return -1; }
     }
 
     /** Private gets quantity for a product, given its ID */
