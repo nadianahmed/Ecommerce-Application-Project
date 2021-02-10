@@ -15,15 +15,6 @@ public class Inventory {
     /** Inventory Constructor */
     public Inventory() { this(new ArrayList<>()); }
 
-    /** Private helper method to add new products */
-    private void addProduct(Product product, int quantity) {
-        if (quantity >= 1                                           // Valid products must have quantity greater than 0,
-                && !inInventory(product.getId())                    // not already exist in the Inventory,
-                && !(product.getPrice() < 0)) {                     // have a non-negative price,
-            productStocks.add(new ProductStock(product, quantity));
-        }                                                           // Do nothing if product is not valid
-    }
-
     /** Checks if product is in inventory, given ID */
     public boolean inInventory(int id) {
         for (ProductStock productStock : productStocks) {
@@ -63,12 +54,16 @@ public class Inventory {
         } else { System.out.println("This product is not in our inventory.");}
     }
 
-    /** Adds to stock if in inventory, adds new product if not. Given Product and quantity */
+    /** Increases stock if given product is in inventory,
+     *  if it is not, adds a new product to the inventory and initializes quantity.
+     *  Given parameters are Product and quantity
+     *  */
     public void addStock(Product product, int quantity) {
-        if (inInventory(product.getId())) {
-            removeStock(product.getId(), -quantity);    // iff products exists in inventory, we "remove" -ve quantity
-        } else {
-            addProduct(product, quantity);              // if not, initialize Product to inventory
+        if (inInventory(product.getId())) {                     // iff products exists in inventory, we "remove" -ve quantity
+            removeStock(product.getId(), -quantity);
+        } else if (quantity >= 1                                     // New products must have quantity greater than 0,
+                && !(product.getPrice() < 0)) {                     // and have a non-negative price,
+            productStocks.add(new ProductStock(product, quantity));
         }
     }
 
