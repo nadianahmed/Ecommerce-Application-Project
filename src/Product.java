@@ -6,7 +6,7 @@ public class Product {
     private final int id;
     private final double price;
 
-    /** Initializing Inventory */
+    /** Product constructor */
     public Product(String name, int id, double price) {
         this.name = name;
         this.id = id;
