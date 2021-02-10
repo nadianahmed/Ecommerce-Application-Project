@@ -16,14 +16,14 @@ public class StoreManager {
     public double processTransaction(int[][] shoppingCart) {
 
         for (int[] value : shoppingCart) {
-            if (value[1] >= inventory.getStock(value[0])) {
+            if (value[1] > inventory.getStock(value[0])) {
                 return -1;
             }
         }
         int checkoutTotal = 0;
         for (int[] ints : shoppingCart) {
             if (inventory.inInventory(ints[0])) {
-                checkoutTotal += ints[1];
+                checkoutTotal += inventory.getProductInfo(ints[0]).getPrice();
                 inventory.removeStock(ints[0], ints[0]);
             } else {
                 return -1;
