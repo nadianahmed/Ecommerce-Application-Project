@@ -8,9 +8,6 @@ public class ProductStock {
         this.quantity = quantity;
     }
 
-    /** Creates ProductStock wrapper given Product, sets quantity to zero */
-    ProductStock(Product product) {this(product, 0); }
-
     public int getQuantity() { return quantity; }
 
     public Product getProduct() { return product; }
