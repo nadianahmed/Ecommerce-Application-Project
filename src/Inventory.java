@@ -21,7 +21,7 @@ public class Inventory {
                 && !inInventory(product.getId())                    // not already exist in the Inventory,
                 && !(product.getPrice() < 0)) {                     // have a non-negative price,
             productStocks.add(new ProductStock(product, quantity));
-        }                                                           // Do nothing if  product is not valid
+        }                                                           // Do nothing if product is not valid
     }
 
     /** Checks if product is in inventory, given ID */
@@ -40,11 +40,11 @@ public class Inventory {
                 if (id == productID) { return i; }
             }
         }
-        return -1;                                                               // Return -1 if id is invalid
+        return -1;                                                      // Return -1 if id is invalid
     }
 
     /** Private gets quantity for a product, given its ID */
-    public int getStock(int id) {                                                //THIS WORKS!!
+    public int getStock(int id) {
         if (inInventory(id)) {
             int i = this.findPlace(id);
             return (productStocks.get(i).getQuantity());
@@ -54,34 +54,26 @@ public class Inventory {
     }
 
     /** Removes stock given ID and less quantity */
-    public void removeStock(int id, int quantity) {                                                         //THIS WORKS!!
+    public void removeStock(int id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
             int newQuantity = productStocks.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {
-                System.out.println("Insufficient inventory to complete.");
-                return;
-            } else {
-                System.out.println("Previous quantity: " + productStocks.get(i).getQuantity());          // temp to test if values change
-                productStocks.get(i).setQuantity(newQuantity);
-                System.out.println("Current quantity: " + productStocks.get(i).getQuantity());          // temp to test if values change
-            }
-        } else {
-            System.out.println("This product is not in our inventory.");                                //temp for testing
-        }
+            if (newQuantity < 0) { return;                               // removes stock iff inventory is sufficient
+            } else { productStocks.get(i).setQuantity(newQuantity); }
+        } else { System.out.println("This product is not in our inventory.");}
     }
 
     /** Adds to stock if in inventory, adds new product if not. Given Product and quantity */
-    protected void addStock(Product product, int quantity) {                                             //THIS WORKS!!
+    public void addStock(Product product, int quantity) {
         if (inInventory(product.getId())) {
-            removeStock(product.getId(), -quantity);
+            removeStock(product.getId(), -quantity);    // iff products exists in inventory, we "remove" -ve quantity
         } else {
-            addProduct(product, quantity);
+            addProduct(product, quantity);              // if not, initialize Product to inventory
         }
     }
 
     /** Returns Product given ID */
-    public Product getProductInfo(int id){                                                                //THIS WORKS!!
+    public Product getProductInfo(int id){
         int i = findPlace(id);
         return productStocks.get(i).getProduct();
     }
