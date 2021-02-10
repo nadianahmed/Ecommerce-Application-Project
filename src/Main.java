@@ -3,22 +3,26 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
 
-        ArrayList<Product> products = new ArrayList<>();
-        ArrayList<Integer> quantity = new ArrayList<>();
+        Product bag = new Product("bag", 1, 15.99);
+        Product shoes = new Product("shoes", 2, 11.99);
+        Product hat = new Product("hat", 3, 8.99);
 
-        Product juice = new Product("Juice", "01", 3.59);
-        Inventory supermarket = new Inventory(products, quantity);
+        ProductStock trial = new ProductStock(shoes, 7);
 
-        products.add(juice);
-        quantity.add(5);
+        Inventory store = new Inventory();
+        StoreManager manager = new StoreManager(store);
 
-        supermarket.addStock("01", 7);
-        int amountJuice = supermarket.getStock("01");
+        store.addStock(bag, 7);
+        store.addStock(shoes, 3);
+        store.addStock(hat, 3);
+        store.removeStock(3, 2);
 
-        System.out.println("get stock: " + amountJuice);
 
-        Inventory bookstore = new Inventory();
-        bookstore.addStock("01", 7);
+        int[][] shoppingCart = {{01, 5}, {02, 3}, {03, 1}};
+
+        double moneySpent = manager.processTransaction(shoppingCart);
+        System.out.println("I spent " + moneySpent + " dollars!");
+
     }
 
 }
