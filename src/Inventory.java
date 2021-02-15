@@ -55,6 +55,7 @@ public class Inventory {
         } else { System.out.println("This product is not in our inventory.");}
     }
 
+
     /** Increases stock if given product is in inventory,
      *  if it is not, adds a new product to the inventory and initializes quantity.
      *  Given parameters are Product and quantity
