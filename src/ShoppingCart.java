@@ -45,8 +45,8 @@ public class ShoppingCart {
         } else { System.out.println("This product is not in our inventory.");}
     }
 
-    /** Increases stock if given product is in inventory,
-     *  if it is not, adds a new product to the inventory and initializes quantity.
+    /** Increases number of an item if given product is in the shopping cart,
+     *  if it is not, adds a new product to the cart and initializes quantity.
      *  Given parameters are Product and quantity
      *  */
     public void addToCart(Product product, int quantity) {
