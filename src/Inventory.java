@@ -45,12 +45,14 @@ public class Inventory {
         }
     }
 
-    /** Removes stock given ID and less quantity */
+    /** Removes from stock given Product's ID and the quantity to be removed */
     public void removeStock(int id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
             int newQuantity = productStocks.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) { return;                               // removes stock iff inventory is sufficient
+            if (newQuantity < 0) {
+                System.out.println("Insufficient stock in inventory. No products were removed.");
+                return;                               // removes stock iff inventory is sufficient
             } else { productStocks.get(i).setQuantity(newQuantity); }
         } else { System.out.println("This product is not in our inventory.");}
     }
