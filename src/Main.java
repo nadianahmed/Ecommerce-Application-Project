@@ -10,22 +10,36 @@ public class Main {
         Product shoes = new Product("shoes", 2, 11.99);
         Product hat = new Product("hat", 3, 8.99);
 
-        ProductStock trial = new ProductStock(shoes, 7);
+        ProductStock shoePair = new ProductStock(shoes, 5);
+        ProductStock bagPair = new ProductStock(bag, 4);
 
         Inventory store = new Inventory();
         StoreManager manager = new StoreManager(store);
+
+        Inventory shop = new Inventory();
+        StoreManager sm = new StoreManager(store);
+
+        ShoppingCart trolley = new ShoppingCart(new ArrayList<>());
+
+        sm.addCart(trolley, bag, 3);
+        trolley.printCartItems();
+        store.printInventory();
 
         store.addStock(bag, 7);
         store.addStock(shoes, 3);
         store.addStock(hat, 3);
         store.removeStock(3, 2);
 
+        sm.addCart(trolley, bag, 3);
+        trolley.printCartItems();
+        store.printInventory();
 
-        int[][] shoppingCart = {{01, 5}, {02, 3}, {03, 1}};
+        sm.removeCart(trolley, 1, 1);
+        trolley.printCartItems();
+        store.printInventory();
 
-        double moneySpent = manager.processTransaction(shoppingCart);
-        System.out.println("I spent " + moneySpent + " dollars!");
-
+        double price = sm.processTransaction(trolley);
+        System.out.println(price);
     }
 
 }

@@ -18,6 +18,9 @@ public class ProductStock {
     /** Product accessor */
     public Product getProduct() { return product; }
 
+    /** Product name accessor */
+    public String getProductName() { return product.getName(); }
+
     /** Product ID accessor */
     public int getProductID() { return product.getId(); }
 

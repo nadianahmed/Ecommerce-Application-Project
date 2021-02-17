@@ -76,6 +76,14 @@ public class Inventory {
         return productStocks.get(i).getProduct();
     }
 
+    public void printInventory() {
+        System.out.println("----- INVENTORY -----");
+        for (ProductStock item : productStocks) {
+            System.out.println("Product: " + item.getProductName() + " --> Quantity: " + item.getQuantity());
+        }
+        System.out.println(" ");
+    }
+
 
 }
 
