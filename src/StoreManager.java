@@ -6,35 +6,71 @@ public class StoreManager {
     private Inventory inventory;
     private int lastCartID = 0;
 
-    /** StoreManager constructor */
+    /**
+     * StoreManager constructor
+     * @param inventory instance of Inventory class
+     */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
-    /** Return quantity of a given Product in inventory */
+    /**
+     * Finds the quantity of a given product within the inventory of this store manager
+     * @param product instance of Product class
+     * @return int quantity of product
+     */
     public int getProductQuantity(Product product) {
         return inventory.getStock(product.getId());
     }
 
-    /** Generates a unique ID incrementally */
+    /**
+     * Generates a unique cart ID incrementally
+     * @return int cart ID
+     */
     public int assignNewCartID(){
         lastCartID++;
         return lastCartID;
     }
 
+    /**
+     * Adds to a number of products for a specific product to the shopping cart
+     * and removes that amount from the inventory if inventory is sufficient,
+     * otherwise no change
+     * @param shoppingCart instance of shoppingCart class
+     * @param product instance of Product class
+     * @param quantity int quantity to be added
+     */
     public void addCart(ShoppingCart shoppingCart, Product product, int quantity) {
         if (inventory.inInventory(product.getId())) {
-            shoppingCart.addToCart(product, quantity);
-            inventory.removeStock(product.getId(), quantity);
-        } else { System.out.println("Insufficient inventory to add to your cart."); }
+            if (inventory.getStock(product.getId()) >= quantity) {
+                shoppingCart.addToCart(product, quantity);
+                inventory.removeStock(product.getId(), quantity);
+                System.out.println(quantity + " "
+                        + product.getName()
+                        + "(s) was added from your cart.");
+            } else System.out.println("Cannot add to cart. Insufficient inventory.");
+        } else System.out.println("Cannot add to cart. This product is not in our inventory.");
     }
 
+
+    /**
+     * Removes a number of products for a specific product from the shopping cart
+     * and adds the removed quantity back to inventory if inventory is sufficient,
+     * otherwise no change
+     * @param shoppingCart instance of shoppingCart class
+     * @param id instance of Product class
+     * @param quantity int quantity to be added
+     */
     public void removeCart(ShoppingCart shoppingCart, int id, int quantity) {
-        if (inventory.inInventory(id)) {
-            shoppingCart.removeFromCart(id, quantity);
+        if (shoppingCart.removeFromCart(id, quantity)) {
             inventory.addStock(inventory.getProductInfo(id), quantity);
-        } else { System.out.println("Insufficient inventory to add to your cart."); }
+        } else return;
     }
 
 
+    /**
+     *
+     * @param shoppingCart
+     * @return
+     */
     public double processTransaction(ShoppingCart shoppingCart) {
         shoppingCart.printCartItems();
         //CHECKOUT

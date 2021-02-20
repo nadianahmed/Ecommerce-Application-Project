@@ -8,15 +8,24 @@ public class Inventory {
 
     private ArrayList<ProductStock> productStocks;
 
-    /** Inventory Constructor */
+    /**
+     * Inventory constructor
+     * @param productStocks ArrayList of wrapper class of Product instance and its int quantity
+     */
     public Inventory(ArrayList<ProductStock> productStocks) {
         this.productStocks = productStocks;
     }
 
-    /** Inventory Constructor */
+    /**
+     * Inventory constructor -> empty inventory
+     */
     public Inventory() { this(new ArrayList<>()); }
 
-    /** Checks if product is in inventory, given ID */
+    /**
+     * Helper method, checks if product is in inventory, given ID
+     * @param id int id for product
+     * @return true if the product is in inventory, false otherwise
+     */
     public boolean inInventory(int id) {
         for (ProductStock productStock : productStocks) {
             int productID = productStock.getProductID();
@@ -24,7 +33,12 @@ public class Inventory {
         } return false;
     }
 
-    /** Returns the index i of in productStocks ArrayList, given a Product's ID */
+
+    /**
+     * Finds the index i of a product in productStocks ArrayList
+     * @param id int id for product
+     * @return int index i
+     */
     private int findPlace(int id) {
         if (inInventory(id)) {
             for (int i = 0; i < productStocks.size(); i++) {
@@ -35,7 +49,11 @@ public class Inventory {
         return -1;                                                      // Return -1 if id is invalid
     }
 
-    /** Private gets quantity for a product, given its ID */
+    /**
+     * Gets quantity for a product, given its id
+     * @param id int id for product
+     * @return int quantity of products if in inventory, -1 otherwise
+     */
     public int getStock(int id) {
         if (inInventory(id)) {
             int i = this.findPlace(id);
@@ -45,7 +63,11 @@ public class Inventory {
         }
     }
 
-    /** Removes from stock given Product's ID and the quantity to be removed */
+    /**
+     * Removes an amount of stock from inventory for a specific product
+     * @param id int id for product
+     * @param quantity int quantity to be removed
+     */
     public void removeStock(int id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
@@ -57,10 +79,12 @@ public class Inventory {
         } else { System.out.println("This product is not in our inventory.");}
     }
 
-    /** Increases stock if given product is in inventory,
-     *  if it is not, adds a new product to the inventory and initializes quantity.
-     *  Given parameters are Product and quantity
-     *  */
+    /**
+     * Adds to an amount of stock for a specific product if in inventory,
+     * otherwise adds a new product to the inventory and initializes quantity.
+     * @param product instance of Product class
+     * @param quantity int quantity to be added
+     */
     public void addStock(Product product, int quantity) {
         if (inInventory(product.getId())) {                     // iff products exists in inventory, we "remove" -ve quantity
             removeStock(product.getId(), -quantity);
@@ -70,12 +94,19 @@ public class Inventory {
         }
     }
 
-    /** Returns Product given ID */
+    /**
+     * Finds the product using its id
+     * @param id int id for product
+     * @return instance of Product class
+     */
     public Product getProductInfo(int id){
         int i = findPlace(id);
         return productStocks.get(i).getProduct();
     }
 
+    /**
+     * Prints all products in inventory and their respective quantities
+     */
     public void printInventory() {
         System.out.println("----- INVENTORY -----");
         for (ProductStock item : productStocks) {

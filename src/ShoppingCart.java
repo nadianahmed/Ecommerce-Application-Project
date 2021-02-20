@@ -7,26 +7,42 @@ import java.util.ArrayList;
 public class ShoppingCart {
     private ArrayList<ProductStock> cartItems;
 
-    /** ShoppingCart Constructor */
+    /**
+     * ShoppingCart constructor
+     * @param items ArrayList of wrapper class of Product instance and its int quantity
+     */
     public ShoppingCart(ArrayList<ProductStock> items) {
         this.cartItems = items;
     }
 
-    /** ShoppingCart Constructor */
+    /**
+     * ShoppingCart constructor -> empty shopping cart
+     * */
     public ShoppingCart() { this(new ArrayList<>()); }
 
-    /** cartItems accessor */
+    /**
+     * cartItems accessor
+     * @return ArrayList cartItems attribute of this instance
+     */
     public ArrayList<ProductStock> getCartItems() {return cartItems; }
 
-    /** Checks if product is in cart, given ID of a product */
-    private boolean inCart(int id) {
+    /**
+     * Helper method, checks if product is in cart
+     * @param id int id for product
+     * @return true if the product is in shopping cart, false otherwise
+     */
+    public boolean inCart(int id) {
         for (ProductStock item : cartItems) {
             int productID = item.getProductID();
             if (productID == id) { return true; }
         } return false;
     }
 
-    /** Returns the index i of in items ArrayList, given a Product's ID */
+    /**
+     * Finds the index i of a product in cartItems ArrayList
+     * @param id int id for product
+     * @return int index i
+     */
     private int findInCart(int id) {
         if (inCart(id)) {
             for (int i = 0; i < cartItems.size(); i++) {
@@ -37,8 +53,14 @@ public class ShoppingCart {
         return -1;                                                      // Return -1 if id is invalid
     }
 
-    /** Removes item(s) from cart given it's ID and quantity to be removed */
-    public void removeFromCart(int id, int quantity) {
+    /**
+     * Removes an amount of stock from shopping cart for a specific product
+     * if appropriate amount of product is in cart and returns true, otherwise returns false
+     * @param id int id for product
+     * @param quantity int quantity to be removed
+     * @return true if items were successfully removed, false otherwise
+     */
+    public boolean removeFromCart(int id, int quantity) {
         if (inCart(id)){
             int i = findInCart(id);
             int newQuantity = cartItems.get(i).getQuantity() - quantity;
@@ -46,14 +68,27 @@ public class ShoppingCart {
                 System.out.println("Your cart does not contain this many "
                         + cartItems.get(i).getProductName()
                         + "(s). Nothing was removed.");
-            } else { cartItems.get(i).setQuantity(newQuantity); }
-        } else { System.out.println("This product is not in your cart.");}
+                return false;
+            } else {
+                cartItems.get(i).setQuantity(newQuantity);
+                System.out.println(quantity + " "
+                        + cartItems.get(i).getProductName()
+                        + "(s) was removed from your cart.");
+                return true;
+            }
+        } else {
+            System.out.println("This product is not in your cart.");
+            return false;
+        }
     }
 
-    /** Increases number of an item if given product is in the shopping cart,
-     *  if it is not, adds a new product to the cart and initializes quantity.
-     *  Given parameters are Product and quantity
-     *  */
+
+    /**
+     * Adds to an amount of stock for a specific product if in shopping cart,
+     * otherwise adds a new product to the shopping cart and initializes quantity.
+     * @param product instance of Product class
+     * @param quantity int quantity to be added
+     */
     public void addToCart(Product product, int quantity) {
         if (inCart(product.getId())) {                     // iff products exists in cart, we "remove" -ve quantity
             removeFromCart(product.getId(), -quantity);
@@ -63,6 +98,9 @@ public class ShoppingCart {
         }
     }
 
+    /**
+     * Prints all products in the shopping cart and their respective quantities
+     */
     public void printCartItems() {
         System.out.println("----- SHOPPING CART -----");
         for (ProductStock item : cartItems) {
