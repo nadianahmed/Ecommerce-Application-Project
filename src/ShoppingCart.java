@@ -102,11 +102,12 @@ public class ShoppingCart {
      * Prints all products in the shopping cart and their respective quantities
      */
     public void printCartItems() {
-        System.out.println("----- SHOPPING CART -----");
+        System.out.println("-------- SHOPPING CART --------");
         for (ProductStock item : cartItems) {
             System.out.println("Product: " + item.getProductName() + " --> Quantity: " + item.getQuantity());
         }
-        System.out.println(" ");
+        System.out.println("-------------------------------");
+        System.out.println("");
     }
 
 }

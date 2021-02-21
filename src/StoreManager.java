@@ -2,6 +2,8 @@
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
 
+import java.util.Scanner;
+
 public class StoreManager {
     private Inventory inventory;
     private int lastCartID = 0;
@@ -11,6 +13,11 @@ public class StoreManager {
      * @param inventory instance of Inventory class
      */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
+
+    /**
+     * StoreManager constructor
+     */
+    public StoreManager() { this.inventory = null; }
 
     /**
      * Finds the quantity of a given product within the inventory of this store manager
@@ -38,7 +45,7 @@ public class StoreManager {
      * @param product instance of Product class
      * @param quantity int quantity to be added
      */
-    public void addCart(ShoppingCart shoppingCart, Product product, int quantity) {
+    public void addItem(ShoppingCart shoppingCart, Product product, int quantity) {
         if (inventory.inInventory(product.getId())) {
             if (inventory.getStock(product.getId()) >= quantity) {
                 shoppingCart.addToCart(product, quantity);
@@ -59,7 +66,7 @@ public class StoreManager {
      * @param id instance of Product class
      * @param quantity int quantity to be added
      */
-    public void removeCart(ShoppingCart shoppingCart, int id, int quantity) {
+    public void removeItem(ShoppingCart shoppingCart, int id, int quantity) {
         if (shoppingCart.removeFromCart(id, quantity)) {
             inventory.addStock(inventory.getProductInfo(id), quantity);
         } else return;
@@ -71,31 +78,29 @@ public class StoreManager {
      * @param shoppingCart
      * @return
      */
-    public double processTransaction(ShoppingCart shoppingCart) {
+    public void processTransaction(ShoppingCart shoppingCart) {
         shoppingCart.printCartItems();
-        //CHECKOUT
+        Scanner input = new Scanner(System.in);
+
         double checkoutTotal = 0;
         for (ProductStock item : shoppingCart.getCartItems()) {
             checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
         }
-        return checkoutTotal;
-    }
+        System.out.println("Your total is: $" + checkoutTotal);
+        System.out.println("");
+        System.out.println("Are you ready to checkout?");
+        System.out.println("Enter 'Y' to checkout or 'N' to continue shopping. Enter 'quit' if you wish to exit.");
+        System.out.println("");
 
-    /** Given a 2D array shoppingCart as [[productID1, quantity], [productID2, quantity]]
-     *  of product IDs and quantities, returns the total price  */
-    public double oldProcessTransaction(int[][] shoppingCart) {
+        String ready = input.nextLine();  // Read user input
 
-        for (int[] value : shoppingCart) {                  // if not in inventory or insufficient quantity, return -1
-            if (!inventory.inInventory(value[0])
-                    || value[1] > inventory.getStock(value[0])) { return -1; }
-        }
-        double checkoutTotal = 0;
-        for (int[] ints : shoppingCart) {
-            checkoutTotal += ints[1] * inventory.getProductInfo(ints[0]).getPrice();    // calculate total at checkout
-            inventory.removeStock(ints[0], ints[1]);
+        if (ready.equalsIgnoreCase("Y")) System.out.println("Proceeding to checkout");
+        else if (ready.equalsIgnoreCase("N")) System.out.println("Returning to store");
+        else if (ready.equalsIgnoreCase("quit")) {
+            for (ProductStock item : shoppingCart.getCartItems()) {
+                removeItem(shoppingCart, item.getProductID(), item.getQuantity());
+                System.out.println("Cart reset.");
             }
-        return checkoutTotal;
+        } else System.out.println("Unrecognized input. Try again in a few seconds");
     }
-
-
 }

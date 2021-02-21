@@ -108,11 +108,12 @@ public class Inventory {
      * Prints all products in inventory and their respective quantities
      */
     public void printInventory() {
-        System.out.println("----- INVENTORY -----");
+        System.out.println("---------- INVENTORY ----------");
         for (ProductStock item : productStocks) {
             System.out.println("Product: " + item.getProductName() + " --> Quantity: " + item.getQuantity());
         }
-        System.out.println(" ");
+        System.out.println("-------------------------------");
+        System.out.println("");
     }
 
 

@@ -21,7 +21,7 @@ public class Main {
 
         ShoppingCart trolley = new ShoppingCart(new ArrayList<>());
 
-        sm.addCart(trolley, bag, 3);
+        sm.addItem(trolley, bag, 3);
         trolley.printCartItems();
         store.printInventory();
 
@@ -30,16 +30,15 @@ public class Main {
         store.addStock(hat, 3);
         store.removeStock(3, 2);
 
-        sm.addCart(trolley, bag, 3);
+        sm.addItem(trolley, bag, 3);
         trolley.printCartItems();
         store.printInventory();
 
-        sm.removeCart(trolley, 1, 1);
+        sm.removeItem(trolley, 1, 1);
         trolley.printCartItems();
         store.printInventory();
 
-        double price = sm.processTransaction(trolley);
-        System.out.println(price);
+        sm.processTransaction(trolley);
     }
 
 }
