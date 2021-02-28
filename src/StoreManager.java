@@ -15,7 +15,7 @@ public class StoreManager {
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
     /**
-     * StoreManager constructor
+     * Default StoreManager constructor
      */
     public StoreManager() { this.inventory = null; }
 
@@ -52,7 +52,7 @@ public class StoreManager {
                 inventory.removeStock(product.getId(), quantity);
                 System.out.println(quantity + " "
                         + product.getName()
-                        + "(s) was added from your cart.");
+                        + "(s) was added to your cart.");
             } else System.out.println("Cannot add to cart. Insufficient inventory.");
         } else System.out.println("Cannot add to cart. This product is not in our inventory.");
     }
@@ -74,33 +74,46 @@ public class StoreManager {
 
 
     /**
-     *
-     * @param shoppingCart
-     * @return
+     * Calculates total cost of items in shoppingCart and displays it. Awaits user input to checkout, continue shopping,
+     * or quit. If a user decides to quit, all items are returned to inventory
+     * @param shoppingCart instance of shoppingCart class
      */
     public void processTransaction(ShoppingCart shoppingCart) {
         shoppingCart.printCartItems();
-        Scanner input = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
         double checkoutTotal = 0;
         for (ProductStock item : shoppingCart.getCartItems()) {
             checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
         }
-        System.out.println("Your total is: $" + checkoutTotal);
-        System.out.println("");
+        System.out.println("Your total is: $" + checkoutTotal + "\n");
         System.out.println("Are you ready to checkout?");
-        System.out.println("Enter 'Y' to checkout or 'N' to continue shopping. Enter 'quit' if you wish to exit.");
-        System.out.println("");
+        System.out.println("Enter 'Y' to checkout or 'N' to continue shopping. Enter 'quit' if you wish to exit.\n");
 
-        String ready = input.nextLine();  // Read user input
 
-        if (ready.equalsIgnoreCase("Y")) System.out.println("Proceeding to checkout");
-        else if (ready.equalsIgnoreCase("N")) System.out.println("Returning to store");
-        else if (ready.equalsIgnoreCase("quit")) {
+        String input = sc.nextLine();  // Read user input
+
+        if (input.equalsIgnoreCase("Y")) System.out.println("Proceeding to checkout");
+        else if (input.equalsIgnoreCase("N")) System.out.println("Returning to store");
+        else if (input.equalsIgnoreCase("quit")) {
             for (ProductStock item : shoppingCart.getCartItems()) {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
                 System.out.println("Cart reset.");
             }
         } else System.out.println("Unrecognized input. Try again in a few seconds");
+    }
+
+
+    /**
+     * Prints all products in inventory and their respective quantities
+     */
+    public void printInventory() {
+        System.out.println("---------------- ");
+        for (ProductStock item : this.inventory.getProductStocks()) {
+            if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
+                System.out.printf("(%d) %-25s $%.2f\t\t %02d\n", item.getProductID(),
+                        item.getProductName(), item.getPrice(), item.getQuantity());
+            }
+        }
     }
 }

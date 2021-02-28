@@ -47,4 +47,9 @@ public class ProductStock {
      */
     public void setQuantity(int quantity) {this.quantity = quantity; }
 
+    /**
+     * Product price accessor
+     * @return double price value of product
+     */
+    public double getPrice() {return product.getPrice(); }
 }

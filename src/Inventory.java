@@ -7,19 +7,30 @@ import java.util.ArrayList;
 public class Inventory {
 
     private ArrayList<ProductStock> productStocks;
+    private String storeName; // Name of the store containing this inventory
 
     /**
      * Inventory constructor
      * @param productStocks ArrayList of wrapper class of Product instance and its int quantity
+     * @param storeName String name of store containing this inventory
      */
-    public Inventory(ArrayList<ProductStock> productStocks) {
+    public Inventory(ArrayList<ProductStock> productStocks, String storeName) {
         this.productStocks = productStocks;
+        this.storeName = storeName;
     }
 
     /**
      * Inventory constructor -> empty inventory
      */
-    public Inventory() { this(new ArrayList<>()); }
+    public Inventory(String storeName) { this(new ArrayList<>(), storeName); }
+
+    /**
+     * productStocks accessor used by StoreManager class
+     * @return ArrayList of wrapper class of Product instance and its int quantity
+     */
+    public ArrayList<ProductStock> getProductStocks() {
+        return productStocks;
+    }
 
     /**
      * Helper method, checks if product is in inventory, given ID
@@ -104,17 +115,6 @@ public class Inventory {
         return productStocks.get(i).getProduct();
     }
 
-    /**
-     * Prints all products in inventory and their respective quantities
-     */
-    public void printInventory() {
-        System.out.println("---------- INVENTORY ----------");
-        for (ProductStock item : productStocks) {
-            System.out.println("Product: " + item.getProductName() + " --> Quantity: " + item.getQuantity());
-        }
-        System.out.println("-------------------------------");
-        System.out.println("");
-    }
 
 
 }

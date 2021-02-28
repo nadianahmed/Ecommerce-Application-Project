@@ -13,32 +13,32 @@ public class Main {
         ProductStock shoePair = new ProductStock(shoes, 5);
         ProductStock bagPair = new ProductStock(bag, 4);
 
-        Inventory store = new Inventory();
+        Inventory store = new Inventory("test store");
         StoreManager manager = new StoreManager(store);
 
-        Inventory shop = new Inventory();
+        Inventory shop = new Inventory("test store");
         StoreManager sm = new StoreManager(store);
 
-        ShoppingCart trolley = new ShoppingCart(new ArrayList<>());
+        ShoppingCart cart = new ShoppingCart(new ArrayList<>());
 
-        sm.addItem(trolley, bag, 3);
-        trolley.printCartItems();
-        store.printInventory();
+        sm.addItem(cart, bag, 7);
+        cart.printCartItems();
+        sm.printInventory();
 
         store.addStock(bag, 7);
         store.addStock(shoes, 3);
         store.addStock(hat, 3);
         store.removeStock(3, 2);
 
-        sm.addItem(trolley, bag, 3);
-        trolley.printCartItems();
-        store.printInventory();
+        sm.addItem(cart, bag, 7);
+        cart.printCartItems();
+        sm.printInventory();
 
-        sm.removeItem(trolley, 1, 1);
-        trolley.printCartItems();
-        store.printInventory();
+        sm.removeItem(cart, 1, 1);
+        cart.printCartItems();
+        sm.printInventory();
 
-        sm.processTransaction(trolley);
+        sm.processTransaction(cart);
     }
 
 }
