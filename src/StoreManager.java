@@ -15,29 +15,6 @@ public class StoreManager {
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
     /**
-     * Default StoreManager constructor
-     */
-    public StoreManager() { this.inventory = null; }
-
-    /**
-     * Finds the quantity of a given product within the inventory of this store manager
-     * @param product instance of Product class
-     * @return int quantity of product
-     */
-    public int getProductQuantity(Product product) {
-        return inventory.getStock(product.getId());
-    }
-
-    /**
-     * Gets the cartID of the shoppingCart belonging to a certain Store View
-     * @param sv instance of StoreView class
-     * @return int unique cartID identifier
-     */
-    public int getCartID(StoreView sv){
-        return sv.getShoppingCart().getCartID();
-    }
-
-    /**
      * Generates a unique cart ID incrementally
      * @return int cart ID
      */

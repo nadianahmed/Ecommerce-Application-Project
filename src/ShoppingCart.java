@@ -6,29 +6,19 @@ import java.util.ArrayList;
 
 public class ShoppingCart {
     private ArrayList<ProductStock> cartItems;
-    private int cartID;
 
     /**
      * ShoppingCart constructor
      * @param items ArrayList of wrapper class of Product instance and its int quantity
      */
-    public ShoppingCart(ArrayList<ProductStock> items, int cartID) {
+    public ShoppingCart(ArrayList<ProductStock> items) {
         this.cartItems = items;
-        this.cartID = cartID;
     }
 
     /**
      * ShoppingCart constructor -> empty shopping cart
      * */
-    public ShoppingCart(int cartID) { this(new ArrayList<>(), cartID); }
-
-    /**
-     * CartID accessor
-     * @return int unique cartID for this shopping cart
-     */
-    public int getCartID() {
-        return cartID;
-    }
+    public ShoppingCart() { this(new ArrayList<>()); }
 
     /**
      * cartItems accessor

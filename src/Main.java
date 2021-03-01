@@ -19,7 +19,7 @@ public class Main {
         Inventory shop = new Inventory("test store");
         StoreManager sm = new StoreManager(store);
 
-        ShoppingCart cart = new ShoppingCart(new ArrayList<>(), sm.assignNewCartID());
+        ShoppingCart cart = new ShoppingCart(new ArrayList<>());
 
         sm.addItem(cart, 1, 7);
         sm.printInventory();

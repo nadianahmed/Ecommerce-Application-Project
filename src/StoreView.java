@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ *  This class represents a store view contains a StoreManager and a unique ShoppingCart
+ */
 public class StoreView {
     private StoreManager storeManager;
     private ShoppingCart shoppingCart;
+    private int cartID;
 
     /**
      * StoreView Constructor
@@ -16,17 +20,22 @@ public class StoreView {
      */
     public StoreView(StoreManager storeManager) {
         this.storeManager = storeManager;
-        this.shoppingCart = new ShoppingCart(storeManager.assignNewCartID());
+        this.shoppingCart = new ShoppingCart();
+        this.cartID = storeManager.assignNewCartID();
     }
 
     /**
-     * shoppingCart accessor
-     * @return instance of ShoppingCart class that is the shoppingCart attribute for this object
+     * CartID accessor
+     * @return int unique cartID for this shopping cart
      */
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
+    public int getCartID() {
+        return cartID;
     }
 
+    /**
+     * Initializes new bakery inventory with the name, id, price, and quantity of the products
+     * @return the available bakery inventory
+     */
     public static Inventory bakeryInventory() {
 
         Product multigrain = new Product("Multigrain Loaf", 01, 4.15);
@@ -48,11 +57,17 @@ public class StoreView {
         return bakery;
     }
 
+    /**
+     * Displays a textual user interface and prompts user input
+     * prints a command for the user to enter a certain subroutine then it prints all
+     * the total and summary of the items in the cart
+     * @return boolean
+     */
     public boolean displayGUI() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter a command...\n(B)rowse\t(A)dd to cart\t(R)emove from cart\t" +
-                "(V)iew cart\t(C)heckout");
+                "(V)iew cart\t(C)heckout\nEnter any other character to skip");
         String input = sc.nextLine();  // Read user input
 
         if (input.equalsIgnoreCase("B")) {
@@ -117,7 +132,7 @@ public class StoreView {
                 if (users[choice] != null) {
                     String chooseAnother = "";
                     while (!chooseAnother.equals("y") && !chooseAnother.equals("Y")) {
-                        System.out.println("Your cart number is " + sm.getCartID(users[choice]) +"\n");
+                        System.out.println("Your cart number is " + users[choice].getCartID() +"\n");
                         // this implementation of displayGUI waits for input and displays the page
 // corresponding to the user's input. it does this once, and then returns
 // true if the user entered 'checkout' or 'quit'.
