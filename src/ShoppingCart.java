@@ -74,7 +74,7 @@ public class ShoppingCart {
         if (inCart(id)){
             int i = findInCart(id);
             int newQuantity = cartItems.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {                     // removes stock iff inventory is sufficient from store manager
+            if (newQuantity < 0) {                     // removes stock iff new # items is non-negative
                 System.out.println("Your cart does not contain this many "
                         + cartItems.get(i).getProductName()
                         + "(s). Nothing was removed.");
