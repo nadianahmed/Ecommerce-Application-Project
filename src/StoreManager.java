@@ -108,7 +108,7 @@ public class StoreManager {
 
         if (input.equalsIgnoreCase("Y")) {
             System.out.println("Proceeding to checkout");
-            System.out.println("Order confirmed! Curbside pickup will be ready 15 mins.");
+            System.out.println("Order confirmed! Curbside pickup will be ready 15 within mins.");
             System.out.println("User has been disconnected. Have a nice day :)\n");
             return true;
         }
@@ -121,7 +121,7 @@ public class StoreManager {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
                 System.out.println("Cart reset.");
                 System.out.println("User has been disconnected. Have a nice day :)\n");
-                return false;
+                return true;
             }
         }
         System.out.println("Unrecognized input. Try again in a few seconds");
@@ -133,13 +133,13 @@ public class StoreManager {
      * Prints all products in inventory and their respective quantities
      */
     public void printInventory() {
-        System.out.println("------------ " + inventory.getStoreName() + " ------------");
+        System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
 
-        System.out.printf("(%s) %-25s $%s %s\n", "#",
-                "Product", "Price", "  Stock");
+        System.out.printf("(%s) %-22s $%s %s\n", "#",
+                "Product", "" + "Unit Price", "\t\t Stock");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
-                System.out.printf("(%d) %-25s $%.2f\t\t %02d\n", item.getProductID(),
+                System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
                         item.getProductName(), item.getPrice(), item.getQuantity());
             }
         }
@@ -152,11 +152,11 @@ public class StoreManager {
      * @param shoppingCart instance of shoppingCart class
      */
     public void printCartItems(ShoppingCart shoppingCart) {
-        System.out.println("--------------- Shopping Cart --------------");
-        System.out.printf("(%s) %-25s $%s %s\n", "#",
-                "Product", "Price", "  Stock");
+        System.out.println("------------------ Shopping Cart -----------------");
+        System.out.printf("(%s) %-22s $%s %s\n", "#",
+                "Product", "" + "Unit Price", "\t\t Stock");
         for (ProductStock item : shoppingCart.getCartItems()) {
-            System.out.printf("(%d) %-25s $%.2f\t\t %02d\n", item.getProductID(),
+            System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
         System.out.println("");

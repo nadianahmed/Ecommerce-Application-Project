@@ -56,12 +56,12 @@ public class StoreView {
         String input = sc.nextLine();  // Read user input
 
         if (input.equalsIgnoreCase("B")) {
-            System.out.println("------------------ BROWSE ------------------");
+            System.out.println("--------------------- BROWSE ---------------------");
             storeManager.printInventory();
             return false;
         }
         if (input.equalsIgnoreCase("A")) {
-            System.out.println("---------------- ADD TO CART ---------------");
+            System.out.println("------------------- ADD TO CART ------------------");
             storeManager.printInventory();
 
             System.out.println("Option #: ");
@@ -75,7 +75,7 @@ public class StoreView {
             return false;
         }
         if (input.equalsIgnoreCase("R")) {
-            System.out.println("------------- REMOVE FROM CART -------------");
+            System.out.println("---------------- REMOVE FROM CART ----------------");
             storeManager.printCartItems(this.shoppingCart);
 
             System.out.println("Option #: ");
@@ -88,11 +88,12 @@ public class StoreView {
             return false;
         }
         if (input.equalsIgnoreCase("V")) {
-            System.out.println("------------------- VIEW -------------------");
+            System.out.println("---------------------- VIEW ----------------------");
             storeManager.printCartItems(shoppingCart);
             return false;
         }
         if (input.equalsIgnoreCase("C")) {
+            System.out.println("-------------------- CHECKOUT --------------------");
             return storeManager.processTransaction(shoppingCart);
         }
         return false;
@@ -129,11 +130,11 @@ public class StoreView {
                         chooseAnother = sc.next();
                     }
                 } else {
-                    System.out.println("MAIN > ERROR > BAD CHOICE\nTHAT STOREVIEW WAS DEACTIVATED");
+                    System.out.println("\nERROR: This storeview was deactivated.");
                 }
             } else {
                 System.out.println(
-                        String.format("MAIN > ERROR > BAD CHOICE\nPLEASE CHOOSE IN RANGE [%d, %d]",
+                        String.format("ERROR: This storeview does not exist\nPlease choose in range [%d, %d]",
                                 0, users.length - 1)
                 );
             }

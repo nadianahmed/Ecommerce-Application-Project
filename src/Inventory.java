@@ -96,7 +96,7 @@ public class Inventory {
                 return;                               // removes stock iff inventory is sufficient
             } else {
                 productStocks.get(i).setQuantity(newQuantity);
-                System.out.println(quantity + getProductInfo(id).getName() +"(s) were removed from inventory.");
+                System.out.println(quantity + " " + getProductInfo(id).getName() +"(s) were removed from inventory.");
             }
         } else { System.out.println("This product is not in our inventory.");}
     }
