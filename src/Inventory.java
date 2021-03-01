@@ -33,6 +33,14 @@ public class Inventory {
     }
 
     /**
+     * storeName accessor
+     * @return String name of store containing this inventory
+     */
+    public String getStoreName() {
+        return storeName;
+    }
+
+    /**
      * Helper method, checks if product is in inventory, given ID
      * @param id int id for product
      * @return true if the product is in inventory, false otherwise
@@ -86,7 +94,10 @@ public class Inventory {
             if (newQuantity < 0) {
                 System.out.println("Insufficient stock in inventory. No products were removed.");
                 return;                               // removes stock iff inventory is sufficient
-            } else { productStocks.get(i).setQuantity(newQuantity); }
+            } else {
+                productStocks.get(i).setQuantity(newQuantity);
+                System.out.println(quantity + getProductInfo(id).getName() +"(s) were removed from inventory.");
+            }
         } else { System.out.println("This product is not in our inventory.");}
     }
 

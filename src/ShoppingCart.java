@@ -6,19 +6,29 @@ import java.util.ArrayList;
 
 public class ShoppingCart {
     private ArrayList<ProductStock> cartItems;
+    private int cartID;
 
     /**
      * ShoppingCart constructor
      * @param items ArrayList of wrapper class of Product instance and its int quantity
      */
-    public ShoppingCart(ArrayList<ProductStock> items) {
+    public ShoppingCart(ArrayList<ProductStock> items, int cartID) {
         this.cartItems = items;
+        this.cartID = cartID;
     }
 
     /**
      * ShoppingCart constructor -> empty shopping cart
      * */
-    public ShoppingCart() { this(new ArrayList<>()); }
+    public ShoppingCart(int cartID) { this(new ArrayList<>(), cartID); }
+
+    /**
+     * CartID accessor
+     * @return int unique cartID for this shopping cart
+     */
+    public int getCartID() {
+        return cartID;
+    }
 
     /**
      * cartItems accessor
@@ -64,7 +74,7 @@ public class ShoppingCart {
         if (inCart(id)){
             int i = findInCart(id);
             int newQuantity = cartItems.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {                                          // removes stock iff inventory is sufficient
+            if (newQuantity < 0) {                     // removes stock iff inventory is sufficient from store manager
                 System.out.println("Your cart does not contain this many "
                         + cartItems.get(i).getProductName()
                         + "(s). Nothing was removed.");
@@ -98,16 +108,5 @@ public class ShoppingCart {
         }
     }
 
-    /**
-     * Prints all products in the shopping cart and their respective quantities
-     */
-    public void printCartItems() {
-        System.out.println("-------- SHOPPING CART --------");
-        for (ProductStock item : cartItems) {
-            System.out.println("Product: " + item.getProductName() + " --> Quantity: " + item.getQuantity());
-        }
-        System.out.println("-------------------------------");
-        System.out.println("");
-    }
 
 }

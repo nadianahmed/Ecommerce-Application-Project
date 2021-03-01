@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class StoreView {
     private StoreManager storeManager;
-    private int cartID;
+    private ShoppingCart shoppingCart;
 
     /**
      * StoreView Constructor
@@ -16,7 +16,15 @@ public class StoreView {
      */
     public StoreView(StoreManager storeManager) {
         this.storeManager = storeManager;
-        cartID = storeManager.assignNewCartID();
+        this.shoppingCart = new ShoppingCart(storeManager.assignNewCartID());
+    }
+
+    /**
+     * shoppingCart accessor
+     * @return instance of ShoppingCart class that is the shoppingCart attribute for this object
+     */
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
     }
 
     public static Inventory bakeryInventory() {
@@ -25,6 +33,7 @@ public class StoreView {
         Product sourdough = new Product("Sourdough Loaf", 02, 3.50);
         Product baguette = new Product("Baguette", 03, 3.99);
         Product ciabatta = new Product("Ciabatta", 04, 2.75);
+        Product croissant = new Product("Croissant", 05, 3.25);
         Product focaccia = new Product("Focaccia", 05, 3.25);
 
         ProductStock multigrainPair = new ProductStock(multigrain, 20);
@@ -42,13 +51,51 @@ public class StoreView {
     public boolean displayGUI() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("YOUR CART NUMBER IS " + this.cartID);
-        System.out.println("Enter a command...\n(B)rowse (C)heckout (H)elp");
-
+        System.out.println("Enter a command...\n(B)rowse\t(A)dd to cart\t(R)emove from cart\t" +
+                "(V)iew cart\t(C)heckout");
         String input = sc.nextLine();  // Read user input
 
-        if (input.equalsIgnoreCase("B")) storeManager.printInventory();
-        return true;
+        if (input.equalsIgnoreCase("B")) {
+            System.out.println("------------------ BROWSE ------------------");
+            storeManager.printInventory();
+            return false;
+        }
+        if (input.equalsIgnoreCase("A")) {
+            System.out.println("---------------- ADD TO CART ---------------");
+            storeManager.printInventory();
+
+            System.out.println("Option #: ");
+            int id = Integer.parseInt(sc.nextLine());
+
+            System.out.println("Quantity: ");
+            int quantity = Integer.parseInt(sc.nextLine());
+
+            storeManager.addItem(shoppingCart, id, quantity);
+
+            return false;
+        }
+        if (input.equalsIgnoreCase("R")) {
+            System.out.println("------------- REMOVE FROM CART -------------");
+            storeManager.printCartItems(this.shoppingCart);
+
+            System.out.println("Option #: ");
+            int id = Integer.parseInt(sc.nextLine());
+
+            System.out.println("Quantity: ");
+            int quantity = Integer.parseInt(sc.nextLine());
+
+            storeManager.removeItem(shoppingCart, id, quantity);
+            return false;
+        }
+        if (input.equalsIgnoreCase("V")) {
+            System.out.println("------------------- VIEW -------------------");
+            storeManager.printCartItems(shoppingCart);
+            return false;
+        }
+        if (input.equalsIgnoreCase("C")) {
+            return storeManager.processTransaction(shoppingCart);
+        }
+        return false;
     }
 
     public static void main(String[] args) {
@@ -63,12 +110,13 @@ public class StoreView {
         Scanner sc = new Scanner(System.in);
 
         while (activeSV > 0) {
-            System.out.print("CHOOSE YOUR STOREVIEW >>> ");
+            System.out.print("Choose a storeview: ");
             int choice = sc.nextInt();
             if (choice < users.length && choice >= 0) {
                 if (users[choice] != null) {
                     String chooseAnother = "";
                     while (!chooseAnother.equals("y") && !chooseAnother.equals("Y")) {
+                        System.out.println("Your cart number is " + sm.getCartID(users[choice]) +"\n");
                         // this implementation of displayGUI waits for input and displays the page
 // corresponding to the user's input. it does this once, and then returns
 // true if the user entered 'checkout' or 'quit'.
@@ -77,7 +125,7 @@ public class StoreView {
                             activeSV--;
                             break;
                         }
-                        System.out.print("GO TO ANOTHER STOREVIEW? (y) >>> ");
+                        System.out.print("Go to another storeview?\n(Y)es\t(N)o\n");
                         chooseAnother = sc.next();
                     }
                 } else {

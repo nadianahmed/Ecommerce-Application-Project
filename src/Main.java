@@ -19,10 +19,9 @@ public class Main {
         Inventory shop = new Inventory("test store");
         StoreManager sm = new StoreManager(store);
 
-        ShoppingCart cart = new ShoppingCart(new ArrayList<>());
+        ShoppingCart cart = new ShoppingCart(new ArrayList<>(), sm.assignNewCartID());
 
-        sm.addItem(cart, bag, 7);
-        cart.printCartItems();
+        sm.addItem(cart, 1, 7);
         sm.printInventory();
 
         store.addStock(bag, 7);
@@ -30,12 +29,10 @@ public class Main {
         store.addStock(hat, 3);
         store.removeStock(3, 2);
 
-        sm.addItem(cart, bag, 7);
-        cart.printCartItems();
+        sm.addItem(cart, 1, 7);
         sm.printInventory();
 
         sm.removeItem(cart, 1, 1);
-        cart.printCartItems();
         sm.printInventory();
 
         sm.processTransaction(cart);
