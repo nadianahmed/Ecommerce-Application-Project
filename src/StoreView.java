@@ -67,7 +67,7 @@ public class StoreView {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter a command...\n(B)rowse\t(A)dd to cart\t(R)emove from cart\t" +
-                "(V)iew cart\t(C)heckout\nEnter any other character to skip");
+                "(V)iew cart\t(C)heckout\t(E)xit\nTo toggle storeview enter any other character");
         String input = sc.nextLine();  // Read user input
 
         if (input.equalsIgnoreCase("B")) {
@@ -111,6 +111,9 @@ public class StoreView {
             System.out.println("-------------------- CHECKOUT --------------------");
             return storeManager.processTransaction(shoppingCart);
         }
+        if (input.equalsIgnoreCase("Q")) {
+            return false;
+        }
         return false;
     }
 
@@ -131,18 +134,23 @@ public class StoreView {
             if (choice < users.length && choice >= 0) {
                 if (users[choice] != null) {
                     String chooseAnother = "";
-                    while (!chooseAnother.equals("y") && !chooseAnother.equals("Y")) {
+
+                    while (!chooseAnother.equalsIgnoreCase("Y")) {
                         System.out.println("Your cart number is " + users[choice].getCartID() +"\n");
                         // this implementation of displayGUI waits for input and displays the page
 // corresponding to the user's input. it does this once, and then returns
 // true if the user entered 'checkout' or 'quit'.
-                        if (users[choice].displayGUI()) {
+                        if (users[choice].displayGUI()) {   // if view deactivated
                             users[choice] = null;
                             activeSV--;
                             break;
                         }
-                        System.out.print("Go to another storeview?\n(Y)es\t(N)o\n");
+
+                        System.out.print("\nGo to another storeview?\n" +
+                                "To remain enter any other character\n(Y)es\t(Q)uit\n");
                         chooseAnother = sc.next();
+
+                        if (chooseAnother.equalsIgnoreCase("Q")) { return; }
                     }
                 } else {
                     System.out.println("\nERROR: This storeview was deactivated.");

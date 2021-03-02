@@ -101,7 +101,8 @@ public class StoreManager {
                 return true;
             }
         }
-        System.out.println("Unrecognized input. Try again in a few seconds");
+        System.out.println("!ERROR! Unrecognized input. Try again.");
+        this.processTransaction(shoppingCart);
         return false;
     }
 
@@ -131,9 +132,9 @@ public class StoreManager {
     public void printCartItems(ShoppingCart shoppingCart) {
         System.out.println("------------------ Shopping Cart -----------------");
         System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "Product", "" + "Unit Price", "\t\t Stock");
+                "Product", "" + "Unit Price", "\t\tAmount");
         for (ProductStock item : shoppingCart.getCartItems()) {
-            System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
+            System.out.printf("(%d) %-22s $%.2f\t\t\t%02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
         System.out.println("");
