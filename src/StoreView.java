@@ -43,16 +43,17 @@ public class StoreView {
         Product baguette = new Product("Baguette", 03, 3.99);
         Product ciabatta = new Product("Ciabatta", 04, 2.75);
         Product croissant = new Product("Croissant", 05, 3.25);
-        Product focaccia = new Product("Focaccia", 05, 3.25);
+        Product focaccia = new Product("Focaccia", 06, 3.25);
 
         ProductStock multigrainPair = new ProductStock(multigrain, 20);
         ProductStock sourdoughPair = new ProductStock(sourdough, 14);
         ProductStock baguettePair = new ProductStock(baguette, 8);
         ProductStock ciabattaPair = new ProductStock(ciabatta, 22);
+        ProductStock croissantPair = new ProductStock(croissant, 22);
         ProductStock focacciaPair = new ProductStock(focaccia, 6);
 
-        Inventory bakery = new Inventory(new ArrayList<ProductStock>(Arrays.asList(multigrainPair, sourdoughPair, baguettePair,
-                ciabattaPair, focacciaPair)), "The Virtual Bakery");
+        Inventory bakery = new Inventory(new ArrayList<ProductStock>(Arrays.asList(multigrainPair, sourdoughPair,
+                baguettePair, croissantPair, ciabattaPair, focacciaPair)), "The Virtual Bakery");
 
         return bakery;
     }
