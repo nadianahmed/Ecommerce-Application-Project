@@ -61,10 +61,15 @@ public class ShoppingCart {
      * @return true if items were successfully removed, false otherwise
      */
     public boolean removeFromCart(int id, int quantity) {
+        if (quantity < 0) {     // user cannot remove a negative number
+            System.out.println("Cannot remove negative amount.");
+            return false;
+        }
+
         if (inCart(id)){
             int i = findInCart(id);
             int newQuantity = cartItems.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {                     // removes stock iff new # items is non-negative
+            if (newQuantity < 0) {                     // removes stock iff new # items in inventory is non-negative
                 System.out.println("Your cart does not contain this many "
                         + cartItems.get(i).getProductName()
                         + "(s). Nothing was removed.");

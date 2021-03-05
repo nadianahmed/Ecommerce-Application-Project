@@ -130,7 +130,8 @@ public class StoreView {
         Scanner sc = new Scanner(System.in);
 
         while (activeSV > 0) {
-            System.out.print("Choose a storeview: ");
+            System.out.printf("Choose a storeview in range [%d, %d]:\n",
+                                                    0, users.length - 1);
             int choice = sc.nextInt();
             if (choice < users.length && choice >= 0) {
                 if (users[choice] != null) {

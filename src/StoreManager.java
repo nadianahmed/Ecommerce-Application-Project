@@ -32,16 +32,23 @@ public class StoreManager {
      * @param quantity int quantity to be added
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {
+
+        if (!inventory.inInventory(productID)) {
+            System.out.println("Cannot add to cart. This item is not in our inventory.");
+            return;
+        }
+        if (quantity < 0) {     // user cannot add a negative number
+            System.out.println("Cannot remove negative amount.");
+            return;
+        }
         Product product = inventory.getProductInfo(productID);
-        if (inventory.inInventory(productID)) {
-            if (inventory.getStock(productID) >= quantity) {
-                shoppingCart.addToCart(product, quantity);
-                inventory.removeStock(productID, quantity);
-                System.out.println(quantity + " "
-                        + product.getName()
-                        + "(s) was added to your cart.");
-            } else System.out.println("Cannot add to cart. Insufficient inventory.");
-        } else System.out.println("Cannot add to cart. This product is not in our inventory.");
+        if (inventory.getStock(productID) >= quantity) {
+            shoppingCart.addToCart(product, quantity);
+            inventory.removeStock(productID, quantity);
+            System.out.println(quantity + " "
+                    + product.getName()
+                    + "(s) was added to your cart.");
+        } else System.out.println("Cannot add to cart. Insufficient inventory.");
     }
 
 
@@ -113,8 +120,7 @@ public class StoreManager {
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
 
-        System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "Product", "" + "Unit Price", "\t\t Stock");
+        System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
                 System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
