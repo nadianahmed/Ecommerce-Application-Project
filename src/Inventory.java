@@ -20,11 +20,6 @@ public class Inventory {
     }
 
     /**
-     * Inventory constructor -> empty inventory
-     */
-    public Inventory(String storeName) { this(new ArrayList<>(), storeName); }
-
-    /**
      * productStocks accessor used by StoreManager class
      * @return ArrayList of wrapper class of Product instance and its int quantity
      */
