@@ -17,6 +17,9 @@ public class StoreManagerTest {
     private static Product prod2;
     private static Product prod3;
 
+    /**
+     * Initializes test objects
+     */
     @BeforeEach
     public void init(){
 
