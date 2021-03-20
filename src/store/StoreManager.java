@@ -2,6 +2,8 @@
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
 
+package store;
+
 import java.util.Scanner;
 
 public class StoreManager {
@@ -9,8 +11,8 @@ public class StoreManager {
     private int lastCartID = 0;
 
     /**
-     * StoreManager constructor
-     * @param inventory instance of Inventory class
+     * store.StoreManager constructor
+     * @param inventory instance of store.Inventory class
      */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
@@ -28,7 +30,7 @@ public class StoreManager {
      * and removes that amount from the inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param productID int unique id for instance of Product class
+     * @param productID int unique id for instance of store.Product class
      * @param quantity int quantity to be added
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {
@@ -37,8 +39,8 @@ public class StoreManager {
             System.out.println("Cannot add to cart. This item is not in our inventory.");
             return;
         }
-        if (quantity < 0) {     // user cannot add a negative number
-            System.out.println("Cannot remove negative amount.");
+        if (quantity <= 0) {     // user cannot add a negative number or zero
+            System.out.println("Cannot add negative or zero amount.");
             return;
         }
         Product product = inventory.getProductInfo(productID);
@@ -57,7 +59,7 @@ public class StoreManager {
      * and adds the removed quantity back to inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param id instance of Product class
+     * @param id instance of store.Product class
      * @param quantity int quantity to be added
      */
     public void removeItem(ShoppingCart shoppingCart, int id, int quantity) {
@@ -120,7 +122,7 @@ public class StoreManager {
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
 
-        System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
+        System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "store.Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
                 System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
@@ -138,7 +140,7 @@ public class StoreManager {
     public void printCartItems(ShoppingCart shoppingCart) {
         System.out.println("------------------ Shopping Cart -----------------");
         System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "Product", "" + "Unit Price", "\t\tAmount");
+                "store.Product", "" + "Unit Price", "\t\tAmount");
         for (ProductStock item : shoppingCart.getCartItems()) {
             System.out.printf("(%d) %-22s $%.2f\t\t\t%02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());

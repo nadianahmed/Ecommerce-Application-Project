@@ -2,6 +2,7 @@
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
 
+package store;
 import java.util.ArrayList;
 
 public class Inventory {
@@ -10,8 +11,8 @@ public class Inventory {
     private String storeName; // Name of the store containing this inventory
 
     /**
-     * Inventory constructor
-     * @param productStocks ArrayList of wrapper class of Product instance and its int quantity
+     * store.Inventory constructor
+     * @param productStocks ArrayList of wrapper class of store.Product instance and its int quantity
      * @param storeName String name of store containing this inventory
      */
     public Inventory(ArrayList<ProductStock> productStocks, String storeName) {
@@ -20,8 +21,8 @@ public class Inventory {
     }
 
     /**
-     * productStocks accessor used by StoreManager class
-     * @return ArrayList of wrapper class of Product instance and its int quantity
+     * productStocks accessor used by store.StoreManager class
+     * @return ArrayList of wrapper class of store.Product instance and its int quantity
      */
     public ArrayList<ProductStock> getProductStocks() {
         return productStocks;
@@ -99,12 +100,14 @@ public class Inventory {
     /**
      * Adds to an amount of stock for a specific product if in inventory,
      * otherwise adds a new product to the inventory and initializes quantity.
-     * @param product instance of Product class
+     * @param product instance of store.Product class
      * @param quantity int quantity to be added
      */
     public void addStock(Product product, int quantity) {
-        if (inInventory(product.getId())) {                     // iff products exists in inventory, we "remove" -ve quantity
-            removeStock(product.getId(), -quantity);
+        if (inInventory(product.getId())) {                     // iff products exists in inventory, we add new quantity
+            int i = findPlace(product.getId());
+            int newQuantity = productStocks.get(i).getQuantity() + quantity;
+            productStocks.get(i).setQuantity(newQuantity);
         } else if (quantity >= 1                                     // New products must have quantity greater than 0,
                 && !(product.getPrice() < 0)) {                     // and have a non-negative price,
             productStocks.add(new ProductStock(product, quantity));
@@ -114,7 +117,7 @@ public class Inventory {
     /**
      * Finds the product using its id
      * @param id int id for product
-     * @return instance of Product class
+     * @return instance of store.Product class
      */
     public Product getProductInfo(int id){
         int i = findPlace(id);

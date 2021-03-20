@@ -2,12 +2,13 @@
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
 
+package store;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- *  This class represents a store view contains a StoreManager and a unique ShoppingCart
+ *  This class represents a store view contains a store.StoreManager and a unique store.ShoppingCart
  */
 public class StoreView {
     private StoreManager storeManager;
@@ -15,8 +16,8 @@ public class StoreView {
     private int cartID;
 
     /**
-     * StoreView Constructor
-     * @param storeManager instance of StoreManager
+     * store.StoreView Constructor
+     * @param storeManager instance of store.StoreManager
      */
     public StoreView(StoreManager storeManager) {
         this.storeManager = storeManager;
@@ -47,7 +48,7 @@ public class StoreView {
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
 
-        bakeryStock.add(new ProductStock(multigrain, 20));                      //
+        bakeryStock.add(new ProductStock(multigrain, 20));
         bakeryStock.add(new ProductStock(sourdough, 14));
         bakeryStock.add(new ProductStock(baguette, 8));
         bakeryStock.add(new ProductStock(ciabatta, 22));
@@ -99,6 +100,7 @@ public class StoreView {
             int id = Integer.parseInt(sc.nextLine());
 
             System.out.println("Quantity: ");
+
             int quantity = Integer.parseInt(sc.nextLine());
 
             storeManager.removeItem(shoppingCart, id, quantity);

@@ -1,6 +1,7 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
+package store;
 
 public class Product {
     private final String name;
@@ -8,7 +9,7 @@ public class Product {
     private final double price;
 
     /**
-     * Product constructor
+     * store.Product constructor
      * @param name String name for product
      * @param id int id for product
      * @param price double price value of product
@@ -29,7 +30,7 @@ public class Product {
 
     /**
      * ID accessor
-     * @return int id for instance of Product
+     * @return int id for instance of store.Product
      */
     public int getId() {
         return id;

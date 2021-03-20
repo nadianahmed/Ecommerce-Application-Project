@@ -2,17 +2,19 @@
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
 
+package store;
+
 public class ProductStock {
     private Product product;
     private int quantity;
 
 
     /**
-     * ProductStock wrapper constructor
-     * @param product instance of Product class
+     * store.ProductStock wrapper constructor
+     * @param product instance of store.Product class
      * @param quantity int quantity of products for this instance
      */
-    ProductStock(Product product, int quantity) {
+    public ProductStock(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
@@ -24,19 +26,19 @@ public class ProductStock {
     public int getQuantity() { return quantity; }
 
     /**
-     * Product accessor
-     * @return attribute instance of Product class
+     * store.Product accessor
+     * @return attribute instance of store.Product class
      */
     public Product getProduct() { return product; }
 
     /**
-     * Product name accessor
+     * store.Product name accessor
      * @return String name of attribute product
      */
     public String getProductName() { return product.getName(); }
 
     /**
-     * Product ID accessor
+     * store.Product ID accessor
      * @return int ID of attribute product
      */
     public int getProductID() { return product.getId(); }
@@ -48,7 +50,7 @@ public class ProductStock {
     public void setQuantity(int quantity) {this.quantity = quantity; }
 
     /**
-     * Product price accessor
+     * store.Product price accessor
      * @return double price value of product
      */
     public double getPrice() {return product.getPrice(); }
