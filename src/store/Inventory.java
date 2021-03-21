@@ -86,11 +86,11 @@ public class Inventory {
     public void removeStock(int id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
-            int newQuantity = productStocks.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {
+            if (quantity <= 0) {
                 System.out.println("Insufficient stock in inventory. No products were removed.");
                 return;                               // removes stock iff inventory is sufficient
             } else {
+                int newQuantity = productStocks.get(i).getQuantity() - quantity;
                 productStocks.get(i).setQuantity(newQuantity);
                 System.out.println(quantity + " " + getProductInfo(id).getName() +"(s) were removed from inventory.");
             }
@@ -119,11 +119,14 @@ public class Inventory {
      * @param id int id for product
      * @return instance of Product class
      */
-    public Product getProductInfo(int id){
-        int i = findPlace(id);
-        return productStocks.get(i).getProduct();
+    public Product getProductInfo(int id) {
+        if (inInventory(id)) {
+            int i = findPlace(id);
+            return productStocks.get(i).getProduct();
+        } else {
+            return null;
+        }
     }
-
 
 
 }

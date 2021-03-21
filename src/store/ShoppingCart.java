@@ -54,6 +54,19 @@ public class ShoppingCart {
         }
         return -1;                                                      // Return -1 if id is invalid
     }
+    /**
+     * Gets quantity for a product, given its id
+     * @param id int id for product
+     * @return int quantity of products if in inventory, -1 otherwise
+     */
+    public int getQuantity(int id) {
+        if (inCart(id)) {
+            int i = this.findInCart(id);
+            return (cartItems.get(i).getQuantity());
+        } else {
+            return -1;
+        }
+    }
 
     /**
      * Removes an amount of stock from shopping cart for a specific product
