@@ -36,7 +36,7 @@ public class InventoryTest {
         prod4 = new Product("prod4", 4, 1.99);
         prod5 = new Product("prod5", 3, -3.99);
 
-        prodstocks = new ArrayList<ProductStock>();
+        prodstocks = new ArrayList<>();
 
         prodstocks.add(new ProductStock(prod1, 0));
         prodstocks.add(new ProductStock(prod2, 14));

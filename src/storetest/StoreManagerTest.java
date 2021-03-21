@@ -38,7 +38,7 @@ public class StoreManagerTest {
         prod3 = new Product("prod3", 3, 3.99);
         prod4 = new Product("prod3", 4, 7.99);  // not added to inventory
 
-        prodstocks = new ArrayList<ProductStock>();
+        prodstocks = new ArrayList<>();
 
         prodstocks.add(new ProductStock(prod1, 20));
         prodstocks.add(new ProductStock(prod2, 14));
