@@ -87,12 +87,15 @@ public class InventoryTest {
         assertEquals(false, inv.inInventory(5), "Inventory's inInventory method " +
                 "incorrectly identifies products are in inventory when they do not exist (inInventory bug)");
 
+        assertEquals(false, inv.inInventory(100), "Inventory's inInventory method " +
+                "incorrectly identifies products are in inventory when they do not exist (inInventory bug)");
+
     }
     /**
      * Test for Inventory's getStock method
      */
     @Test
-    void testGetStock(){
+    void testGetStock() {
         assertEquals(0, inv.getStock(1), "The Inventory's getStock method "+
                 "does not successfully return the quantity of products that already in inventory(getStock method bug)");
 
@@ -103,14 +106,14 @@ public class InventoryTest {
                 "does not successfully return the quantity of products that already in inventory(getStock method bug)");
 
         assertEquals(-1 ,inv.getStock(5),"The Inventory's getStock method "+
-                "does returns incorrect quantity of products that are not in inventory(getStock method bug)");
+                "returns incorrect quantity of products that are NOT in inventory(getStock method bug)");
     }
 
     /**
      * Test for Inventory's removeStock method
      */
     @Test
-    void testRemoveStock(){
+    void testRemoveStock() {
 
         inv.removeStock(1, 0);
         assertEquals(0, inv.getStock(1),"The Inventory's removeStock method " +
@@ -138,9 +141,8 @@ public class InventoryTest {
         assertEquals(0, inv.getStock(1), "Incorrect removed from inventory " +
                 "when adding negative amount to inventory (addStock method bug)");
 
-
         inv.removeStock( 3,0);
-        assertEquals(5, inv.getProductStocks().get(2).getQuantity(), "Incorrect quantity in Inventory. " +
+        assertEquals(5, inv.getStock(3), "Incorrect quantity in Inventory. " +
                 "Zero amount should NOT be able to be added to inventory (addStock method bug)");
     }
 
@@ -149,7 +151,7 @@ public class InventoryTest {
      * Test for Inventory's addStock method
      */
     @Test
-    void testAddStock(){
+    void testAddStock() {
 
         inv.addStock(prod1, 2);
         assertEquals(2, inv.getStock(1), "Incorrect product amount added to inventory " +
@@ -195,7 +197,7 @@ public class InventoryTest {
      * Test for Inventory's getProductInfo method
      */
     @Test
-    void testGetProductInfo(){
+    void testGetProductInfo() {
         assertEquals(prod1, inv.getProductInfo(1), "The Inventory's getProductInfo method " +
                 "does not successfully return the  Info of products that already in inventory (getProductInfo method bug)");
 
