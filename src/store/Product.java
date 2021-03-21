@@ -9,7 +9,7 @@ public class Product {
     private final double price;
 
     /**
-     * store.Product constructor
+     * Product constructor
      * @param name String name for product
      * @param id int id for product
      * @param price double price value of product
@@ -30,7 +30,7 @@ public class Product {
 
     /**
      * ID accessor
-     * @return int id for instance of store.Product
+     * @return int id for instance of Product
      */
     public int getId() {
         return id;

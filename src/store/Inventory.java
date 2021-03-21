@@ -11,8 +11,8 @@ public class Inventory {
     private String storeName; // Name of the store containing this inventory
 
     /**
-     * store.Inventory constructor
-     * @param productStocks ArrayList of wrapper class of store.Product instance and its int quantity
+     * Inventory constructor
+     * @param productStocks ArrayList of wrapper class of Product instance and its int quantity
      * @param storeName String name of store containing this inventory
      */
     public Inventory(ArrayList<ProductStock> productStocks, String storeName) {
@@ -21,8 +21,8 @@ public class Inventory {
     }
 
     /**
-     * productStocks accessor used by store.StoreManager class
-     * @return ArrayList of wrapper class of store.Product instance and its int quantity
+     * productStocks accessor used by StoreManager class
+     * @return ArrayList of wrapper class of Product instance and its int quantity
      */
     public ArrayList<ProductStock> getProductStocks() {
         return productStocks;
@@ -100,7 +100,7 @@ public class Inventory {
     /**
      * Adds to an amount of stock for a specific product if in inventory,
      * otherwise adds a new product to the inventory and initializes quantity.
-     * @param product instance of store.Product class
+     * @param product instance of Product class
      * @param quantity int quantity to be added
      */
     public void addStock(Product product, int quantity) {
@@ -117,7 +117,7 @@ public class Inventory {
     /**
      * Finds the product using its id
      * @param id int id for product
-     * @return instance of store.Product class
+     * @return instance of Product class
      */
     public Product getProductInfo(int id){
         int i = findPlace(id);

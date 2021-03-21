@@ -59,7 +59,7 @@ public class StoreManager {
      * and adds the removed quantity back to inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param id instance of store.Product class
+     * @param id instance of Product class
      * @param quantity int quantity to be added
      */
     public void removeItem(ShoppingCart shoppingCart, int id, int quantity) {
@@ -105,12 +105,12 @@ public class StoreManager {
         else if (input.equalsIgnoreCase("Q")) {
             for (ProductStock item : shoppingCart.getCartItems()) {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
-                System.out.println("Cart reset.");
-                System.out.println("User has been disconnected. Have a nice day :)\n");
-                return true;
             }
+            System.out.println("Cart reset.");
+            System.out.println("User has been disconnected. Have a nice day :)\n");
+            return true;
         }
-        System.out.println("!ERROR! Unrecognized input. Try again.");
+        System.out.println("ERROR: Unrecognized input. Try again.");
         this.processTransaction(shoppingCart);
         return false;
     }
@@ -122,7 +122,7 @@ public class StoreManager {
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
 
-        System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "store.Product");
+        System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
                 System.out.printf("(%d) %-22s $%.2f\t\t\t %02d\n", item.getProductID(),
@@ -140,7 +140,7 @@ public class StoreManager {
     public void printCartItems(ShoppingCart shoppingCart) {
         System.out.println("------------------ Shopping Cart -----------------");
         System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "store.Product", "" + "Unit Price", "\t\tAmount");
+                "Product", "" + "Unit Price", "\t\tAmount");
         for (ProductStock item : shoppingCart.getCartItems()) {
             System.out.printf("(%d) %-22s $%.2f\t\t\t%02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());

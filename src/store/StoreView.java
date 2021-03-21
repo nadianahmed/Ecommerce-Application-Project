@@ -80,6 +80,7 @@ public class StoreView {
             storeManager.printInventory();
             return false;
         }
+
         if (input.equalsIgnoreCase("A")) {
             System.out.println("------------------- ADD TO CART ------------------");
             try {
@@ -91,12 +92,10 @@ public class StoreView {
                 int quantity = Integer.parseInt(sc.nextLine());
 
                 storeManager.addItem(shoppingCart, id, quantity);
-
                 return false;
+
             } catch (NumberFormatException e) {
-                System.out.println("'Integer' expected, String entered");
-            } finally {
-                System.out.println("Enter Integer ");
+                System.out.println("Input Mismatch Exception ==> Numerical value expected");
             }
         }
         if (input.equalsIgnoreCase("R")) {
@@ -113,10 +112,8 @@ public class StoreView {
                 return false;
             }
             catch (NumberFormatException e) {
-                System.out.println("'Integer' expected, String entered");
+                System.out.println("Input Mismatch Exception ==> Numerical value expected");
             }
-            finally {
-                System.out.println("Enter Integer"); }
         }
         if (input.equalsIgnoreCase("V")) {
             System.out.println("---------------------- VIEW ----------------------");
@@ -185,10 +182,7 @@ public class StoreView {
             System.out.println("ALL STOREVIEWS DEACTIVATED");
         }
         catch (InputMismatchException e){
-            System.out.println("The input does not match the pattern for the expected type");
-        }
-        finally {
-            System.out.println("Please enter \"range [0, 2]\" ");
+            System.out.println("Input Mismatch Exception ==> Numerical value expected");
             StoreView.main(null);
         }
     }

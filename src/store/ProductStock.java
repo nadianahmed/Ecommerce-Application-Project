@@ -10,8 +10,8 @@ public class ProductStock {
 
 
     /**
-     * store.ProductStock wrapper constructor
-     * @param product instance of store.Product class
+     * ProductStock wrapper constructor
+     * @param product instance of Product class
      * @param quantity int quantity of products for this instance
      */
     public ProductStock(Product product, int quantity) {
@@ -23,25 +23,25 @@ public class ProductStock {
      * quantity accessor
      * @return attribute int quantity of products
      */
-    public int getQuantity() { return quantity; }
+    public int getQuantity() { return this.quantity; }
 
     /**
-     * store.Product accessor
-     * @return attribute instance of store.Product class
+     * Product accessor
+     * @return attribute instance of Product class
      */
-    public Product getProduct() { return product; }
+    public Product getProduct() { return this.product; }
 
     /**
-     * store.Product name accessor
+     * Product name accessor
      * @return String name of attribute product
      */
-    public String getProductName() { return product.getName(); }
+    public String getProductName() { return this.product.getName(); }
 
     /**
-     * store.Product ID accessor
+     * Product ID accessor
      * @return int ID of attribute product
      */
-    public int getProductID() { return product.getId(); }
+    public int getProductID() { return this.product.getId(); }
 
     /**
      * quantity modifier
@@ -50,8 +50,8 @@ public class ProductStock {
     public void setQuantity(int quantity) {this.quantity = quantity; }
 
     /**
-     * store.Product price accessor
+     * Product price accessor
      * @return double price value of product
      */
-    public double getPrice() {return product.getPrice(); }
+    public double getPrice() {return this.product.getPrice(); }
 }

@@ -10,15 +10,15 @@ public class ShoppingCart {
     private ArrayList<ProductStock> cartItems;
 
     /**
-     * store.ShoppingCart constructor
-     * @param items ArrayList of wrapper class of store.Product instance and its int quantity
+     * ShoppingCart constructor
+     * @param items ArrayList of wrapper class of Product instance and its int quantity
      */
     public ShoppingCart(ArrayList<ProductStock> items) {
         this.cartItems = items;
     }
 
     /**
-     * store.ShoppingCart constructor -> empty shopping cart
+     * ShoppingCart constructor -> empty shopping cart
      * */
     public ShoppingCart() { this(new ArrayList<>()); }
 
@@ -93,7 +93,7 @@ public class ShoppingCart {
     /**
      * Adds to an amount of stock for a specific product if in shopping cart,
      * otherwise adds a new product to the shopping cart and initializes quantity.
-     * @param product instance of store.Product class
+     * @param product instance of Product class
      * @param quantity int quantity to be added
      */
     public void addToCart(Product product, int quantity) {
