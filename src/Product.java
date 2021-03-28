@@ -7,24 +7,38 @@ public class Product {
     private final int id;
     private final double price;
 
-    /** Product constructor */
+    /**
+     * Product constructor
+     * @param name String name for product
+     * @param id int id for product
+     * @param price double price value of product
+     */
     public Product(String name, int id, double price) {
         this.name = name;
         this.id = id;
         this.price = price;
     }
 
-    /** Name accessor */
+    /**
+     * Name accessor
+     * @return String name of attribute product
+     */
     public String getName() {
         return name;
     }
 
-    /** ID accessor */
+    /**
+     * ID accessor
+     * @return int id for instance of Product
+     */
     public int getId() {
         return id;
     }
 
-    /** Price accessor */
+    /**
+     * Price accessor
+     * @return double price value of product
+     */
     public double getPrice() {
         return price;
     }
