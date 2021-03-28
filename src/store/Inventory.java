@@ -104,6 +104,7 @@ public class Inventory {
      * @param product instance of Product class
      * @param quantity int quantity to be added
      */
+
     public void addStock(Product product, int quantity) {
         if (inInventory(product.getId())) {                     // iff products exists in inventory, we add new quantity
             int i = findPlace(product.getId());
