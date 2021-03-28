@@ -1,6 +1,9 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
+// Milestone 3
+
+package store;
 
 import java.util.ArrayList;
 
@@ -52,6 +55,19 @@ public class ShoppingCart {
         }
         return -1;                                                      // Return -1 if id is invalid
     }
+    /**
+     * Gets quantity for a product, given its id
+     * @param id int id for product
+     * @return int quantity of products if in inventory, -1 otherwise
+     */
+    public int getQuantity(int id) {
+        if (inCart(id)) {
+            int i = this.findInCart(id);
+            return (cartItems.get(i).getQuantity());
+        } else {
+            return -1;
+        }
+    }
 
     /**
      * Removes an amount of stock from shopping cart for a specific product
@@ -61,8 +77,8 @@ public class ShoppingCart {
      * @return true if items were successfully removed, false otherwise
      */
     public boolean removeFromCart(int id, int quantity) {
-        if (quantity < 0) {     // user cannot remove a negative number
-            System.out.println("Cannot remove negative amount.");
+        if (quantity <= 0) {     // user cannot remove a negative number
+            System.out.println("Cannot remove negative or zero amount.");
             return false;
         }
 
@@ -95,8 +111,10 @@ public class ShoppingCart {
      * @param quantity int quantity to be added
      */
     public void addToCart(Product product, int quantity) {
-        if (inCart(product.getId())) {                     // iff products exists in cart, we "remove" -ve quantity
-            removeFromCart(product.getId(), -quantity);
+        if (inCart(product.getId())) {                     // iff products exists in cart, we add new quantity
+            int i = findInCart(product.getId());
+            int newQuantity = cartItems.get(i).getQuantity() + quantity;
+            cartItems.get(i).setQuantity(newQuantity);
         } else if (quantity >= 1                                     // New products must have quantity greater than 0,
                 && !(product.getPrice() < 0)) {                     // and have a non-negative price,
             cartItems.add(new ProductStock(product, quantity));

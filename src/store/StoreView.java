@@ -1,9 +1,12 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
+// Milestone 3
+
+package store;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -47,7 +50,7 @@ public class StoreView {
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
 
-        bakeryStock.add(new ProductStock(multigrain, 20));                      //
+        bakeryStock.add(new ProductStock(multigrain, 20));
         bakeryStock.add(new ProductStock(sourdough, 14));
         bakeryStock.add(new ProductStock(baguette, 8));
         bakeryStock.add(new ProductStock(ciabatta, 22));
@@ -66,6 +69,7 @@ public class StoreView {
      * @return boolean
      */
     public boolean displayGUI() {
+
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter a command...\n(B)rowse\t(A)dd to cart\t(R)emove from cart\t" +
@@ -77,38 +81,47 @@ public class StoreView {
             storeManager.printInventory();
             return false;
         }
+
         if (input.equalsIgnoreCase("A")) {
             System.out.println("------------------- ADD TO CART ------------------");
-            storeManager.printInventory();
+            try {
+                storeManager.printInventory();
+                System.out.println("Option #: ");
+                int id = Integer.parseInt(sc.nextLine());
 
-            System.out.println("Option #: ");
-            int id = Integer.parseInt(sc.nextLine());
+                System.out.println("Quantity: ");
+                int quantity = Integer.parseInt(sc.nextLine());
 
-            System.out.println("Quantity: ");
-            int quantity = Integer.parseInt(sc.nextLine());
+                storeManager.addItem(shoppingCart, id, quantity);
+                return false;
 
-            storeManager.addItem(shoppingCart, id, quantity);
-
-            return false;
+            } catch (NumberFormatException e) {
+                System.out.println("Input Mismatch Exception ==> Numerical value expected");
+            }
         }
         if (input.equalsIgnoreCase("R")) {
             System.out.println("---------------- REMOVE FROM CART ----------------");
-            storeManager.printCartItems(this.shoppingCart);
+            try {
+                storeManager.printCartItems(this.shoppingCart);
+                System.out.println("Option #: ");
+                int id = Integer.parseInt(sc.nextLine());
 
-            System.out.println("Option #: ");
-            int id = Integer.parseInt(sc.nextLine());
+                System.out.println("Quantity: ");
+                int quantity = Integer.parseInt(sc.nextLine());
 
-            System.out.println("Quantity: ");
-            int quantity = Integer.parseInt(sc.nextLine());
-
-            storeManager.removeItem(shoppingCart, id, quantity);
-            return false;
+                storeManager.removeItem(shoppingCart, id, quantity);
+                return false;
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Input Mismatch Exception ==> Numerical value expected");
+            }
         }
         if (input.equalsIgnoreCase("V")) {
             System.out.println("---------------------- VIEW ----------------------");
             storeManager.printCartItems(shoppingCart);
             return false;
         }
+
         if (input.equalsIgnoreCase("C")) {
             System.out.println("-------------------- CHECKOUT --------------------");
             return storeManager.processTransaction(shoppingCart);
@@ -127,44 +140,51 @@ public class StoreView {
         StoreView sv3 = new StoreView(sm);
         StoreView[] users = {sv1, sv2, sv3};
         int activeSV = users.length;
+        try {
+            Scanner sc = new Scanner(System.in);
+            while (activeSV > 0) {
+                System.out.printf("Choose a storeview in range [%d, %d]:\n",
+                        0, users.length - 1);
+                int choice = sc.nextInt();
+                if (choice < users.length && choice >= 0) {
+                    if (users[choice] != null) {
+                        String chooseAnother = "";
 
-        Scanner sc = new Scanner(System.in);
-
-        while (activeSV > 0) {
-            System.out.printf("Choose a storeview in range [%d, %d]:\n",
-                                                    0, users.length - 1);
-            int choice = sc.nextInt();
-            if (choice < users.length && choice >= 0) {
-                if (users[choice] != null) {
-                    String chooseAnother = "";
-
-                    while (!chooseAnother.equalsIgnoreCase("Y")) {
-                        System.out.println("Your cart number is " + users[choice].getCartID() +"\n");
-                        // this implementation of displayGUI waits for input and displays the page
+                        while (!chooseAnother.equalsIgnoreCase("Y")) {
+                            System.out.println("Your cart number is " + users[choice].getCartID() + "\n");
+                            // this implementation of displayGUI waits for input and displays the page
 // corresponding to the user's input. it does this once, and then returns
 // true if the user entered 'checkout' or 'quit'.
-                        if (users[choice].displayGUI()) {   // if view deactivated
-                            users[choice] = null;
-                            activeSV--;
-                            break;
+                            if (users[choice].displayGUI()) {   // if view deactivated
+                                users[choice] = null;
+                                activeSV--;
+                                break;
+                            }
+
+                            System.out.print("\nGo to another storeview?\n" +
+                                    "To remain enter any other character\n(Y)es\t(Q)uit\n");
+                            chooseAnother = sc.next();
+
+                            if (chooseAnother.equalsIgnoreCase("Q")) {
+                                return;
+                            }
+
                         }
-
-                        System.out.print("\nGo to another storeview?\n" +
-                                "To remain enter any other character\n(Y)es\t(Q)uit\n");
-                        chooseAnother = sc.next();
-
-                        if (chooseAnother.equalsIgnoreCase("Q")) { return; }
+                    } else {
+                        System.out.println("\nERROR: This storeview was deactivated.");
                     }
                 } else {
-                    System.out.println("\nERROR: This storeview was deactivated.");
+                    System.out.println(
+                            String.format("ERROR: This storeview does not exist\nPlease choose in range [%d, %d]",
+                                    0, users.length - 1)
+                    );
                 }
-            } else {
-                System.out.println(
-                        String.format("ERROR: This storeview does not exist\nPlease choose in range [%d, %d]",
-                                0, users.length - 1)
-                );
             }
+            System.out.println("ALL STOREVIEWS DEACTIVATED");
         }
-        System.out.println("ALL STOREVIEWS DEACTIVATED");
+        catch (InputMismatchException e){
+            System.out.println("Input Mismatch Exception ==> Numerical value expected");
+            StoreView.main(null);
+        }
     }
 }

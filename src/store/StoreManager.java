@@ -1,6 +1,9 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
+// Milestone 3
+
+package store;
 
 import java.util.Scanner;
 
@@ -9,8 +12,8 @@ public class StoreManager {
     private int lastCartID = 0;
 
     /**
-     * StoreManager constructor
-     * @param inventory instance of Inventory class
+     * store.StoreManager constructor
+     * @param inventory instance of store.Inventory class
      */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
@@ -28,7 +31,7 @@ public class StoreManager {
      * and removes that amount from the inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param productID int unique id for instance of Product class
+     * @param productID int unique id for instance of store.Product class
      * @param quantity int quantity to be added
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {
@@ -37,8 +40,8 @@ public class StoreManager {
             System.out.println("Cannot add to cart. This item is not in our inventory.");
             return;
         }
-        if (quantity < 0) {     // user cannot add a negative number
-            System.out.println("Cannot remove negative amount.");
+        if (quantity <= 0) {     // user cannot add a negative number or zero
+            System.out.println("Cannot add negative or zero amount.");
             return;
         }
         Product product = inventory.getProductInfo(productID);
@@ -103,12 +106,12 @@ public class StoreManager {
         else if (input.equalsIgnoreCase("Q")) {
             for (ProductStock item : shoppingCart.getCartItems()) {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
-                System.out.println("Cart reset.");
-                System.out.println("User has been disconnected. Have a nice day :)\n");
-                return true;
             }
+            System.out.println("Cart reset.");
+            System.out.println("User has been disconnected. Have a nice day :)\n");
+            return true;
         }
-        System.out.println("!ERROR! Unrecognized input. Try again.");
+        System.out.println("ERROR: Unrecognized input. Try again.");
         this.processTransaction(shoppingCart);
         return false;
     }

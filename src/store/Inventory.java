@@ -1,7 +1,9 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
+// Milestone 3
 
+package store;
 import java.util.ArrayList;
 
 public class Inventory {
@@ -85,11 +87,11 @@ public class Inventory {
     public void removeStock(int id, int quantity) {
         if (inInventory(id)){
             int i = findPlace(id);
-            int newQuantity = productStocks.get(i).getQuantity() - quantity;
-            if (newQuantity < 0) {
+            if (quantity <= 0) {
                 System.out.println("Insufficient stock in inventory. No products were removed.");
                 return;                               // removes stock iff inventory is sufficient
             } else {
+                int newQuantity = productStocks.get(i).getQuantity() - quantity;
                 productStocks.get(i).setQuantity(newQuantity);
                 System.out.println(quantity + " " + getProductInfo(id).getName() +"(s) were removed from inventory.");
             }
@@ -104,8 +106,10 @@ public class Inventory {
      */
 
     public void addStock(Product product, int quantity) {
-        if (inInventory(product.getId())) {                     // iff products exists in inventory, we "remove" -ve quantity
-            removeStock(product.getId(), -quantity);
+        if (inInventory(product.getId())) {                     // iff products exists in inventory, we add new quantity
+            int i = findPlace(product.getId());
+            int newQuantity = productStocks.get(i).getQuantity() + quantity;
+            productStocks.get(i).setQuantity(newQuantity);
         } else if (quantity >= 1                                     // New products must have quantity greater than 0,
                 && !(product.getPrice() < 0)) {                     // and have a non-negative price,
             productStocks.add(new ProductStock(product, quantity));
@@ -117,11 +121,14 @@ public class Inventory {
      * @param id int id for product
      * @return instance of Product class
      */
-    public Product getProductInfo(int id){
-        int i = findPlace(id);
-        return productStocks.get(i).getProduct();
+    public Product getProductInfo(int id) {
+        if (inInventory(id)) {
+            int i = findPlace(id);
+            return productStocks.get(i).getProduct();
+        } else {
+            return null;
+        }
     }
-
 
 
 }
