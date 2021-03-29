@@ -56,12 +56,11 @@ public class StoreView {
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        JPanel welcomePage = welcomePage();
+        JPanel mainPage = mainPage();
 
-        JPanel welcomePanel = welcomePage();
-        JPanel mainPanel = mainPage();
-
-        parentPanel.add(welcomePanel, "Welcome Page");
-        parentPanel.add(mainPanel, "MainPage");
+        parentPanel.add(welcomePage, "Welcome Page");
+        parentPanel.add(mainPage, "MainPage");
 
         frame.add(parentPanel);
         frame.pack();
@@ -123,7 +122,7 @@ public class StoreView {
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        JButton startButton = new JButton("Start");
+        JButton startButton = new JButton("Shop");
         startButton.setFont(new Font("Georgia", Font.PLAIN, 25));
 
 
@@ -167,8 +166,56 @@ public class StoreView {
             }
         });
 
-        panel.add(cartButton);
-        panel.setVisible(true);
+        GridBagConstraints c = new GridBagConstraints();    // welcomeLabel constraints
+
+
+        JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'><p style=\"font-size:50px\">" +
+                "The Virtual Bakery</p></div></html>");
+
+
+        JLabel top_left = new JLabel("Top Left");
+        JLabel middle_left = new JLabel("Middle Left");
+        JLabel bottom_left = new JLabel("Bottom Left");
+        JLabel middle_right = new JLabel("Middle Right");
+        JLabel bottom_right = new JLabel("Bottom Right");
+        JLabel middle_centre= new JLabel("Middle Centre");
+        JLabel bottom_centre= new JLabel("Bottom Centre");
+
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.insets = new Insets(40, 40, 40, 40);
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        panel.add(top_left, c);
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.PAGE_START;
+        panel.add(titleLabel, c);
+        c.gridx = 2;
+        c.anchor = GridBagConstraints.FIRST_LINE_END;
+        panel.add(cartButton, c);
+
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(middle_left, c);
+        c.gridx = 1;
+        panel.add(middle_centre, c);
+        c.gridx = 2;
+        panel.add(middle_right, c);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(bottom_left, c);
+        c.gridx = 1;
+        panel.add(bottom_centre, c);
+        c.gridx = 2;
+        panel.add(bottom_right, c);
+
+
+
+
 
         return panel;
 
