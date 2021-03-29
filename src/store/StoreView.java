@@ -5,9 +5,18 @@
 
 package store;
 
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.awt.Font;
 
 /**
  *  This class represents a store view contains a StoreManager and a unique ShoppingCart
@@ -16,6 +25,10 @@ public class StoreView {
     private StoreManager storeManager;
     private ShoppingCart shoppingCart;
     private int cartID;
+    private static CardLayout cardsLayout = new CardLayout();
+    private static JPanel parentPanel = new JPanel(cardsLayout);
+    private static JFrame mainFrame = initializeFrame();
+
 
     /**
      * StoreView Constructor
@@ -25,6 +38,36 @@ public class StoreView {
         this.storeManager = storeManager;
         this.shoppingCart = new ShoppingCart();
         this.cartID = storeManager.assignNewCartID();
+    }
+
+    private static JFrame initializeFrame() {
+        JFrame frame = new JFrame();
+        frame.setTitle("The Virtual Bakery");
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH); // make full screen
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit?")
+                        == JOptionPane.OK_OPTION) {
+                    frame.setVisible(false);
+                    frame.dispose();
+                }
+            }
+        });
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+        JPanel welcomePanel = welcomePage();
+        JPanel mainPanel = mainPage();
+
+        parentPanel.add(welcomePanel, "Welcome Page");
+        parentPanel.add(mainPanel, "MainPage");
+
+        frame.add(parentPanel);
+        frame.pack();
+        frame.setVisible(true);
+
+        return frame;
     }
 
     /**
@@ -63,12 +106,82 @@ public class StoreView {
     }
 
     /**
+     * Initializes JPanel for a welcome page
+     */
+    private static JPanel welcomePage() {
+
+        JLabel welcomeLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'><p style=\"font-size:15px\"> " +
+                "WELCOME TO</p><br><p style=\"font-size:50px\">The Virtual Bakery</p></div></html>");
+
+        GridBagConstraints c = new GridBagConstraints();    // welcomeLabel constraints
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridwidth = 3;
+        c.gridheight = 1;
+        c.ipady = 400;
+
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        JButton startButton = new JButton("Start");
+        startButton.setFont(new Font("Georgia", Font.PLAIN, 25));
+
+
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cardsLayout.next(parentPanel);
+            }
+        });
+
+        GridBagConstraints b = new GridBagConstraints(); // startButton constraints
+        b.anchor = GridBagConstraints.CENTER;
+        b.gridx = 0;
+        b.gridy = 0;
+        b.weighty = 1;
+        b.weightx = 1;
+        b.gridwidth = 3;
+        b.gridheight = 1;
+        b.ipady = 20;
+        b.ipadx = 30;
+
+        panel.add(welcomeLabel, c);
+        panel.add(startButton, b);
+
+        panel.setVisible(true);
+
+        return panel;
+    }
+
+    private static JPanel mainPage(){
+
+        JButton cartButton = new JButton("My Cart");
+        cartButton.setFont(new Font("Georgia", Font.PLAIN, 25));
+
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        cartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cardsLayout.first(parentPanel);
+            }
+        });
+
+        panel.add(cartButton);
+        panel.setVisible(true);
+
+        return panel;
+
+    }
+
+    /**
      * Displays a textual user interface and prompts user input
      * prints a command for the user to enter a certain subroutine then it prints all
      * the total and summary of the items in the cart
      * @return boolean
      */
     public boolean displayGUI() {
+
 
         Scanner sc = new Scanner(System.in);
 
@@ -124,15 +237,17 @@ public class StoreView {
 
         if (input.equalsIgnoreCase("C")) {
             System.out.println("-------------------- CHECKOUT --------------------");
-            return storeManager.processTransaction(shoppingCart);
+            return storeManager.processTransaction(shoppingCart, sc);
         }
-        if (input.equalsIgnoreCase("Q")) {
+        if (input.equalsIgnoreCase("E")) {
             return false;
         }
         return false;
     }
 
     public static void main(String[] args) {
+
+        mainFrame.setVisible(true);
 
         StoreManager sm = new StoreManager(bakeryInventory());
         StoreView sv1 = new StoreView(sm);

@@ -78,9 +78,8 @@ public class StoreManager {
      * @return boolean true if transaction is completed successfully or if user decides to quit, either way indicates
      * user has left the store, otherwise returns false
      */
-    public boolean processTransaction(ShoppingCart shoppingCart) {
+    public boolean processTransaction(ShoppingCart shoppingCart, Scanner sc) {
         this.printCartItems(shoppingCart);
-        Scanner sc = new Scanner(System.in);
 
         double checkoutTotal = 0;
         for (ProductStock item : shoppingCart.getCartItems()) {
@@ -112,7 +111,7 @@ public class StoreManager {
             return true;
         }
         System.out.println("ERROR: Unrecognized input. Try again.");
-        this.processTransaction(shoppingCart);
+        this.processTransaction(shoppingCart, sc);
         return false;
     }
 
