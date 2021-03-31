@@ -122,6 +122,8 @@ public class StoreManager {
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
 
+        String[] inventoryStocks = new String[this.inventory.getProductStocks().size()];
+
         System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
@@ -146,5 +148,34 @@ public class StoreManager {
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
         System.out.println("");
+    }
+
+    /**
+     * Gets price and stock of every product in inventory
+     * @return invStocks 2D array of stocks and prices
+     */
+    public float[][] getInventoryInfo() {
+        int n = inventory.getProductStocks().size();
+        float[][] invStocks = new float[n][2];
+        for (int i = 0; i < n; i++) {
+            invStocks[i][0] = inventory.getProductStocks().get(i).getQuantity();
+            invStocks[i][1] = (float) inventory.getProductStocks().get(i).getPrice();
+        }
+        return invStocks;
+    }
+
+    /**
+     * Gets price of every product in cart
+     * @return cartAmount array of stocks
+     */
+    public int[] getCartInfo(ShoppingCart shoppingCart) {
+        int n = inventory.getProductStocks().size();
+        int[] cartAmount = new int[n];
+        int i = 0;
+        for (ProductStock item : this.inventory.getProductStocks()) {
+            cartAmount[i] = shoppingCart.getQuantity(item.getProductID());
+            i++;
+        }
+        return cartAmount;
     }
 }

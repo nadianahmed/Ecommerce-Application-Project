@@ -6,13 +6,9 @@
 package store;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -27,8 +23,6 @@ public class StoreView {
     private int cartID;
     private static CardLayout cardsLayout = new CardLayout();
     private static JPanel parentPanel = new JPanel(cardsLayout);
-    private static JFrame mainFrame = initializeFrame();
-
 
     /**
      * StoreView Constructor
@@ -40,7 +34,7 @@ public class StoreView {
         this.cartID = storeManager.assignNewCartID();
     }
 
-    private static JFrame initializeFrame() {
+    private static JFrame initializeFrame(StoreManager sm) {
         JFrame frame = new JFrame();
         frame.setTitle("The Virtual Bakery");
         frame.setExtendedState(Frame.MAXIMIZED_BOTH); // make full screen
@@ -57,10 +51,10 @@ public class StoreView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel welcomePage = welcomePage();
-        JPanel mainPage = mainPage();
+        JPanel mainPage = mainPage(sm);
 
-        parentPanel.add(welcomePage, "Welcome Page");
-        parentPanel.add(mainPage, "MainPage");
+        parentPanel.add(welcomePage);
+        parentPanel.add(mainPage);
 
         frame.add(parentPanel);
         frame.pack();
@@ -83,19 +77,20 @@ public class StoreView {
      */
     public static Inventory bakeryInventory() {
 
-        Product multigrain = new Product("Multigrain Loaf", 01, 4.15);  // creating each new product
+        Product cheesecake = new Product("Cheesecake", 01, 4.15);  // creating each new product
         Product sourdough = new Product("Sourdough Loaf", 02, 3.50);
-        Product baguette = new Product("Baguette", 03, 3.99);
-        Product ciabatta = new Product("Ciabatta", 04, 2.75);
-        Product croissant = new Product("Croissant", 05, 3.25);
+        Product baguette = new Product("Baguette", 03, 3.90);
+        Product banana = new Product("Banana Bread", 04, 2.75);
+        Product croissant = new Product("Butter Croissant", 05, 3.25);
         Product focaccia = new Product("Focaccia", 06, 3.25);
+
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
 
-        bakeryStock.add(new ProductStock(multigrain, 20));
+        bakeryStock.add(new ProductStock(cheesecake, 20));
         bakeryStock.add(new ProductStock(sourdough, 14));
         bakeryStock.add(new ProductStock(baguette, 8));
-        bakeryStock.add(new ProductStock(ciabatta, 22));
+        bakeryStock.add(new ProductStock(banana, 22));
         bakeryStock.add(new ProductStock(croissant, 22));
         bakeryStock.add(new ProductStock(focaccia, 6));
 
@@ -120,11 +115,10 @@ public class StoreView {
         c.gridheight = 1;
         c.ipady = 400;
 
-        JPanel panel = new JPanel(new GridBagLayout());
+        JPanel welcomePanel = new JPanel(new GridBagLayout());
 
         JButton startButton = new JButton("Shop");
-        startButton.setFont(new Font("Georgia", Font.PLAIN, 25));
-
+        startButton.setFont(new Font("", Font.PLAIN, 15));
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -144,22 +138,82 @@ public class StoreView {
         b.ipady = 20;
         b.ipadx = 30;
 
-        panel.add(welcomeLabel, c);
-        panel.add(startButton, b);
-
-        panel.setVisible(true);
-
-        return panel;
+        welcomePanel.add(welcomeLabel, c);
+        welcomePanel.add(startButton, b);
+        welcomePanel.setVisible(true);
+        return welcomePanel;
     }
 
-    private static JPanel mainPage(){
+    private static JButton minusButton() {
+        JButton minusButton = new JButton("-");
+        minusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+            }
+        });
+        return minusButton;
+    }
 
-        JButton cartButton = new JButton("My Cart");
-        cartButton.setFont(new Font("Georgia", Font.PLAIN, 25));
+    private static JPanel[] makeFoodPanels(StoreManager sm) {
+        JPanel[] foodPanels = new JPanel[6];
+        String[] foodPics = {"croissant.png", "baguette.png", "cheesecake.jpeg",
+                                "banana.png", "sourdough.png", "focaccia.png"};
+        String[] foodNames = {"Croissant", "Baguette", "Cheesecake", "Banana Bread", "Sourdough Loaf", "Focaccia"};
+
+        float[][] foodInfo = sm.getInventoryInfo(); // prices and stock
+
+        for (int i = 0; i < 6; i++) {
+            int count = 0;
+            JPanel bigPanel = new JPanel(new GridBagLayout());
+            JPanel textPanel = new JPanel(new BorderLayout());
+            JPanel buttonPanel = new JPanel(new FlowLayout());
+
+            JButton plusButton = new JButton("+");
+            JButton minusButton = new JButton("-");
+            JLabel countLabel = new JLabel(String.valueOf(count));
+
+
+            JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
+                                                                        foodInfo[i][1], (int)foodInfo[i][0]));
+            textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
+
+
+            JLabel productLabel = new JLabel(String.format("<html><p style=\"font-size:21px\"><br><br>%s</p></html>", foodNames[i]));
+            productLabel.setBorder(new EmptyBorder(0, 10, 10, 0));
+
+            JLabel imageLabel = new JLabel();
+            imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(foodPics[i])).
+                    getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
+
+
+            GridBagConstraints c = new GridBagConstraints();    // bigPanel constraints
+            buttonPanel.add(minusButton);
+            buttonPanel.add(countLabel);
+            buttonPanel.add(plusButton);
+
+            textPanel.add(productLabel, BorderLayout.PAGE_START);
+            textPanel.add(textLabel, BorderLayout.CENTER);
+            textPanel.add(buttonPanel, BorderLayout.PAGE_END);
+
+            c.gridx = 0;
+            bigPanel.add(imageLabel, c);
+            c.gridx = 1;
+            c.ipadx = 50;
+            bigPanel.add(textPanel, c);
+
+            foodPanels[i] = bigPanel;
+        }
+        return foodPanels;
+    }
+
+    private static JPanel mainPage(StoreManager sm) {
+
+        JButton backButton = new JButton("Back");
+        JButton cartButton = new JButton("View Cart");
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        cartButton.addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 cardsLayout.first(parentPanel);
@@ -168,57 +222,46 @@ public class StoreView {
 
         GridBagConstraints c = new GridBagConstraints();    // welcomeLabel constraints
 
+        JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'>" +
+                "<p style=\"font-size:35px\">The Virtual Bakery</p></div></html>");
+        JPanel titlePanel = new JPanel(new BorderLayout(400, 0));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.add(cartButton, BorderLayout.LINE_END);
+        titlePanel.add(backButton, BorderLayout.LINE_START);
 
-        JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'><p style=\"font-size:50px\">" +
-                "The Virtual Bakery</p></div></html>");
-
-
-        JLabel top_left = new JLabel("Top Left");
-        JLabel middle_left = new JLabel("Middle Left");
-        JLabel bottom_left = new JLabel("Bottom Left");
-        JLabel middle_right = new JLabel("Middle Right");
-        JLabel bottom_right = new JLabel("Bottom Right");
-        JLabel middle_centre= new JLabel("Middle Centre");
-        JLabel bottom_centre= new JLabel("Bottom Centre");
+        JPanel[] foodPanels = makeFoodPanels(sm);
 
         c.weightx = 0.5;
         c.weighty = 0.5;
-        c.insets = new Insets(40, 40, 40, 40);
-
         c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        panel.add(top_left, c);
-        c.gridx = 1;
-        c.anchor = GridBagConstraints.PAGE_START;
-        panel.add(titleLabel, c);
-        c.gridx = 2;
-        c.anchor = GridBagConstraints.FIRST_LINE_END;
-        panel.add(cartButton, c);
-
+        c.gridx = 0;
+        c.gridwidth = 3;
         c.anchor = GridBagConstraints.CENTER;
+        panel.add(titlePanel, c);
+
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(0, 20, 0, 0);
         c.gridx = 0;
         c.gridy = 1;
-        panel.add(middle_left, c);
-        c.gridx = 1;
-        panel.add(middle_centre, c);
-        c.gridx = 2;
-        panel.add(middle_right, c);
-
-        c.gridx = 0;
+        panel.add(foodPanels[0], c);
         c.gridy = 2;
-        panel.add(bottom_left, c);
+        panel.add(foodPanels[1], c);
+
+        c.insets = new Insets(0, 0, 0, 0);
         c.gridx = 1;
-        panel.add(bottom_centre, c);
+        c.gridy = 1;
+        panel.add(foodPanels[2], c);
+        c.gridy = 2;
+        panel.add(foodPanels[3], c);
+
         c.gridx = 2;
-        panel.add(bottom_right, c);
-
-
-
-
+        c.gridy = 1;
+        panel.add(foodPanels[4], c);
+        c.gridy = 2;
+        panel.add(foodPanels[5], c);
 
         return panel;
-
     }
 
     /**
@@ -294,9 +337,8 @@ public class StoreView {
 
     public static void main(String[] args) {
 
-        mainFrame.setVisible(true);
-
         StoreManager sm = new StoreManager(bakeryInventory());
+        JFrame mainFrame = initializeFrame(sm);
         StoreView sv1 = new StoreView(sm);
         StoreView sv2 = new StoreView(sm);
         StoreView sv3 = new StoreView(sm);
