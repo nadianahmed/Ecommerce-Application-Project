@@ -23,6 +23,7 @@ public class StoreView {
     private int cartID;
     private static CardLayout cardsLayout = new CardLayout();
     private static JPanel parentPanel = new JPanel(cardsLayout);
+    private static int choice;
 
     /**
      * StoreView Constructor
@@ -49,17 +50,6 @@ public class StoreView {
             }
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel welcomePage = welcomePage();
-        JPanel mainPage = mainPage(sm);
-
-        parentPanel.add(welcomePage);
-        parentPanel.add(mainPage);
-
-        frame.add(parentPanel);
-        frame.pack();
-        frame.setVisible(true);
-
         return frame;
     }
 
@@ -77,21 +67,21 @@ public class StoreView {
      */
     public static Inventory bakeryInventory() {
 
-        Product cheesecake = new Product("Cheesecake", 01, 4.15);  // creating each new product
-        Product sourdough = new Product("Sourdough Loaf", 02, 3.50);
-        Product baguette = new Product("Baguette", 03, 3.90);
+        Product croissant = new Product("Butter Croissant", 01, 3.25);  // creating each new product
+        Product baguette = new Product("Baguette", 02, 3.90);
+        Product cheesecake = new Product("Cheesecake", 03, 4.15);
         Product banana = new Product("Banana Bread", 04, 2.75);
-        Product croissant = new Product("Butter Croissant", 05, 3.25);
+        Product sourdough = new Product("Sourdough Loaf", 05, 3.50);
         Product focaccia = new Product("Focaccia", 06, 3.25);
 
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
 
-        bakeryStock.add(new ProductStock(cheesecake, 20));
-        bakeryStock.add(new ProductStock(sourdough, 14));
-        bakeryStock.add(new ProductStock(baguette, 8));
-        bakeryStock.add(new ProductStock(banana, 22));
         bakeryStock.add(new ProductStock(croissant, 22));
+        bakeryStock.add(new ProductStock(baguette, 8));
+        bakeryStock.add(new ProductStock(cheesecake, 20));
+        bakeryStock.add(new ProductStock(banana, 22));
+        bakeryStock.add(new ProductStock(sourdough, 14));
         bakeryStock.add(new ProductStock(focaccia, 6));
 
         Inventory bakery = new Inventory(bakeryStock, "The Virtual Bakery");
@@ -144,17 +134,57 @@ public class StoreView {
         return welcomePanel;
     }
 
-    private static JButton minusButton() {
+    private JPanel makeButtonPanel(int id, StoreManager sm, JLabel textLabel) {
+        int i = id - 1; // index for getCartInfo
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton plusButton = new JButton("+");
         JButton minusButton = new JButton("-");
+        minusButton.setEnabled(false);
+
+        int currVal = sm.getCartInfo(this.shoppingCart)[i];
+        JLabel countLabel = new JLabel(String.valueOf(currVal));
+
+        plusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                plusButton.setEnabled(true);
+                storeManager.addItem(shoppingCart, id, 1);
+                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1));
+                textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
+                        sm.getInventoryInfo()[i][1], (int)sm.getInventoryInfo()[i][0]));
+                if (sm.getInventoryInfo()[i][0] <= 0) {
+                    plusButton.setEnabled(false);
+                }
+                if (sm.getCartInfo(shoppingCart)[i] > 0) {
+                    minusButton.setEnabled(true);
+                }
+            }
+        });
+
         minusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                storeManager.removeItem(shoppingCart, id, 1);
+                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) - 1));
+                textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
+                        sm.getInventoryInfo()[i][1], (int)sm.getInventoryInfo()[i][0]));
+                if (sm.getInventoryInfo()[i][0] > 0) {
+                    plusButton.setEnabled(true);
+                }
+                if (sm.getCartInfo(shoppingCart)[i] < 1) {
+                    minusButton.setEnabled(false);
+                }
             }
         });
-        return minusButton;
+
+        buttonPanel.add(minusButton);
+        buttonPanel.add(countLabel);
+        buttonPanel.add(plusButton);
+
+        return buttonPanel;
     }
 
-    private static JPanel[] makeFoodPanels(StoreManager sm) {
+    private JPanel[] makeFoodPanels(StoreManager sm) {
         JPanel[] foodPanels = new JPanel[6];
         String[] foodPics = {"croissant.png", "baguette.png", "cheesecake.jpeg",
                                 "banana.png", "sourdough.png", "focaccia.png"};
@@ -163,20 +193,14 @@ public class StoreView {
         float[][] foodInfo = sm.getInventoryInfo(); // prices and stock
 
         for (int i = 0; i < 6; i++) {
-            int count = 0;
             JPanel bigPanel = new JPanel(new GridBagLayout());
             JPanel textPanel = new JPanel(new BorderLayout());
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-
-            JButton plusButton = new JButton("+");
-            JButton minusButton = new JButton("-");
-            JLabel countLabel = new JLabel(String.valueOf(count));
-
 
             JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
                                                                         foodInfo[i][1], (int)foodInfo[i][0]));
             textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
 
+            JPanel buttonPanel = makeButtonPanel(i + 1, sm, textLabel);
 
             JLabel productLabel = new JLabel(String.format("<html><p style=\"font-size:21px\"><br><br>%s</p></html>", foodNames[i]));
             productLabel.setBorder(new EmptyBorder(0, 10, 10, 0));
@@ -185,11 +209,7 @@ public class StoreView {
             imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(foodPics[i])).
                     getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
 
-
             GridBagConstraints c = new GridBagConstraints();    // bigPanel constraints
-            buttonPanel.add(minusButton);
-            buttonPanel.add(countLabel);
-            buttonPanel.add(plusButton);
 
             textPanel.add(productLabel, BorderLayout.PAGE_START);
             textPanel.add(textLabel, BorderLayout.CENTER);
@@ -206,7 +226,7 @@ public class StoreView {
         return foodPanels;
     }
 
-    private static JPanel mainPage(StoreManager sm) {
+    private JPanel mainPage(StoreManager sm) {
 
         JButton backButton = new JButton("Back");
         JButton cartButton = new JButton("View Cart");
@@ -272,7 +292,6 @@ public class StoreView {
      */
     public boolean displayGUI() {
 
-
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter a command...\n(B)rowse\t(A)dd to cart\t(R)emove from cart\t" +
@@ -329,19 +348,29 @@ public class StoreView {
             System.out.println("-------------------- CHECKOUT --------------------");
             return storeManager.processTransaction(shoppingCart, sc);
         }
-        if (input.equalsIgnoreCase("E")) {
-            return false;
-        }
         return false;
     }
 
     public static void main(String[] args) {
 
         StoreManager sm = new StoreManager(bakeryInventory());
-        JFrame mainFrame = initializeFrame(sm);
+
         StoreView sv1 = new StoreView(sm);
         StoreView sv2 = new StoreView(sm);
         StoreView sv3 = new StoreView(sm);
+
+        JFrame frame = initializeFrame(sm);
+
+        JPanel welcomePage = welcomePage();
+        JPanel mainPage = sv1.mainPage(sm);     // GUI only supports one StoreView
+
+        parentPanel.add(welcomePage);
+        parentPanel.add(mainPage);
+
+        frame.add(parentPanel);
+        frame.pack();
+        frame.setVisible(true); // displays JFrame
+
         StoreView[] users = {sv1, sv2, sv3};
         int activeSV = users.length;
         try {
@@ -350,7 +379,9 @@ public class StoreView {
                 System.out.printf("Choose a storeview in range [%d, %d]:\n",
                         0, users.length - 1);
                 int choice = sc.nextInt();
+
                 if (choice < users.length && choice >= 0) {
+
                     if (users[choice] != null) {
                         String chooseAnother = "";
 

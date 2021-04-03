@@ -65,7 +65,7 @@ public class ShoppingCart {
             int i = this.findInCart(id);
             return (cartItems.get(i).getQuantity());
         } else {
-            return -1;
+            return 0;
         }
     }
 

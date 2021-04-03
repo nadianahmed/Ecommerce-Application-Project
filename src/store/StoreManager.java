@@ -156,12 +156,12 @@ public class StoreManager {
      */
     public float[][] getInventoryInfo() {
         int n = inventory.getProductStocks().size();
-        float[][] invStocks = new float[n][2];
+        float[][] invInfo = new float[n][2];
         for (int i = 0; i < n; i++) {
-            invStocks[i][0] = inventory.getProductStocks().get(i).getQuantity();
-            invStocks[i][1] = (float) inventory.getProductStocks().get(i).getPrice();
+            invInfo[i][0] = inventory.getProductStocks().get(i).getQuantity();
+            invInfo[i][1] = (float) inventory.getProductStocks().get(i).getPrice();
         }
-        return invStocks;
+        return invInfo;
     }
 
     /**
