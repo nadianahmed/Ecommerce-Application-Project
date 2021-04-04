@@ -1,7 +1,7 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 3
+// Milestone 4
 
 package store;
 
@@ -35,10 +35,16 @@ public class StoreView {
         this.cartID = storeManager.assignNewCartID();
     }
 
+    /**
+     * Initializes the JFrame for the program's GUI
+     * @param sm StoreManager class instance
+     * @return JFrame for main program
+     */
     private static JFrame initializeFrame(StoreManager sm) {
         JFrame frame = new JFrame();
         frame.setTitle("The Virtual Bakery");
         frame.setExtendedState(Frame.MAXIMIZED_BOTH); // make full screen
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
@@ -73,7 +79,6 @@ public class StoreView {
         Product banana = new Product("Banana Bread", 04, 2.75, "banana.png");
         Product sourdough = new Product("Sourdough Loaf", 05, 3.50, "sourdough.png");
         Product focaccia = new Product("Focaccia", 06, 3.25, "focaccia.png");
-
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
 
@@ -135,14 +140,14 @@ public class StoreView {
     }
 
     /**
-     * Private helper method that manages the JPanel layout for a given Product
+     * Private helper method that manages the JPanel layout with JButtons for a given Product
+     * that let a user add/remove items from their cart
      * @param id int for desired product
      * @param sm StoreManager instance
      * @param textLabel JLabel containing product info
-     * @return
+     * @return JPanel with JButtons
      */
     private JPanel makeButtonPanel(int id, StoreManager sm, JLabel textLabel) {
-        int i = id - 1; // index for getCartInfo
         Inventory inv = sm.getInventory();
         Product prod = inv.getProductInfo(id);
 
@@ -161,11 +166,11 @@ public class StoreView {
                 countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
                                                  prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
+
+                minusButton.setEnabled(true);           // removing enabled (cart has > 0 items)
+
                 if (inv.getStock(prod.getId()) <= 0) {
-                    plusButton.setEnabled(false);
-                }
-                if (shoppingCart.getQuantity(id) > 0) {
-                    minusButton.setEnabled(true);
+                    plusButton.setEnabled(false);       // adding disabled if inv insufficient
                 }
             }
         });
@@ -177,11 +182,11 @@ public class StoreView {
                 countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) - 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
                                                  prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
-                if (inv.getStock(prod.getId()) > 0) {
-                    plusButton.setEnabled(true);
-                }
+
+                plusButton.setEnabled(true);            // adding enabled (inv becomes sufficient)
+
                 if (shoppingCart.getQuantity(id) < 1) {
-                    minusButton.setEnabled(false);
+                    minusButton.setEnabled(false);      // removing disabled if cart has > 0 items
                 }
             }
         });
@@ -194,6 +199,7 @@ public class StoreView {
 
     /**
      * Private helper method to make the JPanel layout for every product in a given StoreManager's Inventory
+     * Creates JPanels with an title, an image, product info, and add/remove buttons
      * @param sm StoreManager instance
      * @return JPanel[] array of JPanels
      */
@@ -204,37 +210,37 @@ public class StoreView {
 
         // set up a JPanel for each product
         for (int i = 0; i < inv.getProductStocks().size(); i++) {
-            Product prod = inv.getProductStocks().get(i).getProduct(); // ith prod in inventory
+            Product prod = inv.getProductStocks().get(i).getProduct();
 
             JPanel bigPanel = new JPanel(new GridBagLayout());
             JPanel textPanel = new JPanel(new BorderLayout());
 
-            // JLabel for product name (title)
+            // product name (title)
             JLabel productLabel = new JLabel(String.format("<html><p style=\"font-size:21px\"><br><br>%s</p></html>",
                                                               prod.getName()));
             productLabel.setBorder(new EmptyBorder(0, 10, 10, 0));
 
-            // JLabel for product info (price and stock)
+            // product info (price and stock)
             JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
                                                             prod.getPrice(), inv.getStock(prod.getId())));
             textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
 
-            // JLabel for product image
+            // product image
             JLabel imageLabel = new JLabel();
             imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(prod.getPictureFile())).
                     getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
 
-            // JPanel with add/remove buttons and counter
+            // add/remove buttons and counter
             JPanel buttonPanel = makeButtonPanel(prod.getId(), sm, textLabel);
 
             textPanel.add(productLabel, BorderLayout.PAGE_START);
             textPanel.add(textLabel, BorderLayout.CENTER);
             textPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
-            GridBagConstraints c = new GridBagConstraints();    // bigPanel constraints
-            c.gridx = 0;
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;    // imageLabel constraints
             bigPanel.add(imageLabel, c);
-            c.gridx = 1;
+            c.gridx = 1;    // textPanel constraints
             c.ipadx = 50;
             bigPanel.add(textPanel, c);
 
@@ -245,7 +251,7 @@ public class StoreView {
 
     /**
      * Private helper method to make the JPanel layout for the programs "main page"
-     * (Precondition: that the given sm's inventory contains less than 6 products)
+     * (works best given sm's inventory contains 6 products or less)
      * @param sm StoreManager instance
      * @return JPanel for the program's "main page"
      */
@@ -266,14 +272,65 @@ public class StoreView {
         cartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                parentPanel.remove(2);
-                JPanel checkoutPanel = checkoutPage(sm);
-                parentPanel.add(checkoutPanel);
-                cardsLayout.last(parentPanel); // go to previous page
+                Object[] options1 = {"Checkout", "Continue Shopping", "Quit"};
+                int response1 = JOptionPane.showOptionDialog(parentPanel,
+                                sm.printCartItems(shoppingCart),
+                                "My Cart",
+                                JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                options1,
+                                options1[0]);
+
+                if(response1 == 0) {    // if user chooses to checkout
+                    double checkoutTotal = 0.0;
+                    for (ProductStock item : shoppingCart.getCartItems()) {
+                        checkoutTotal += item.getQuantity() * item.getProduct().getPrice(); // get cart total
+                    }
+
+                    Object[] options2 = {"Yes", "No", "Quit"};
+                    int response2 = JOptionPane.showOptionDialog(parentPanel,
+                            String.format("Your total is: $%.2f\nAre you ready to checkout?", checkoutTotal),
+                            "Checkout",
+                            JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options2,
+                            options2[0]);
+                    if(response2 == 0) {    // user confirmed checking out, disconnecting user
+                        sm.processTransaction(shoppingCart, "Y");
+                        Object[] options = {"OK"};
+                        int n = JOptionPane.showOptionDialog(frame,
+                                "Order confirmed! Curbside pickup will be ready within 15 mins.\n" +
+                                        "Have a nice day :)",
+                                "See you soon!",
+                                JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                options,
+                                options[0]);
+                        frame.setVisible(false);
+                        frame.dispose();
+
+
+                    } else if (response2 == 1){ // continue shopping
+                        sm.processTransaction(shoppingCart, "N");
+                    } else if (response2 == 2) { // quit
+                        sm.processTransaction(shoppingCart, "Q");
+                        frame.setVisible(false);
+                        frame.dispose();
+                    }
+                } else if (response1 == 1){ // continue shopping
+                    sm.processTransaction(shoppingCart, "N");
+                } else if (response1 == 2){ // quit
+                    sm.processTransaction(shoppingCart, "Q");
+                    frame.setVisible(false);
+                    frame.dispose();
+                }
             }
         });
 
-        GridBagConstraints c = new GridBagConstraints();    // welcomeLabel constraints
+        GridBagConstraints c = new GridBagConstraints();
 
         JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'>" +
                 "<p style=\"font-size:35px\">The Virtual Bakery</p></div></html>");
@@ -284,190 +341,32 @@ public class StoreView {
 
         JPanel[] foodPanels = makeFoodPanels(sm);
 
-        c.weightx = 0.5;
+        c.weightx = 0.5;    // titlePanel constraints
         c.weighty = 0.5;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 3;
+        c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor = GridBagConstraints.CENTER;
         panel.add(titlePanel, c);
 
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(0, 20, 0, 0);
-        c.gridx = 0;
-        c.gridy = 1;
-        panel.add(foodPanels[0], c);
-        c.gridy = 2;
-        panel.add(foodPanels[1], c);
-
-        c.insets = new Insets(0, 0, 0, 0);
-        c.gridx = 1;
-        c.gridy = 1;
-        panel.add(foodPanels[2], c);
-        c.gridy = 2;
-        panel.add(foodPanels[3], c);
-
-        c.gridx = 2;
-        c.gridy = 1;
-        panel.add(foodPanels[4], c);
-        c.gridy = 2;
-        panel.add(foodPanels[5], c);
-
-        return panel;
-    }
-
-    private JPanel receiptPanel(StoreManager sm) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        JPanel cartPanel = new JPanel(new GridBagLayout());
-        JPanel receiptPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-
-        Inventory inv = sm.getInventory();
-
-        int i = 0;
-        // check if each item in inv is in this cart
-        for (ProductStock prodStock : inv.getProductStocks()) {
-            System.out.println("I AM I THE LOOP");
-            if (shoppingCart.getQuantity(prodStock.getProductID()) > 0) {
-                System.out.println("I AM  THE F");
-                Product prod = prodStock.getProduct();
-                JPanel textPanel = new JPanel(new BorderLayout());
-
-                // JLabel for product info (price and stock)
-                JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:15px\"><br>%s</p><p style=\"font-size:12px\">$%.2f<br><br>Quantity: %d<br><br></p></html>",
-                        prod.getName(),prod.getPrice(), shoppingCart.getQuantity(prodStock.getProductID())));
-                textLabel.setBorder(new EmptyBorder(10, 10, 10, 0));
-                textLabel.setPreferredSize(new Dimension(350, 150));
-
-                // JLabel for product image
-                JLabel imageLabel = new JLabel();
-                imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(prod.getPictureFile())).
-                        getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-
-
-                textPanel.add(imageLabel, BorderLayout.LINE_START);
-                textPanel.add(textLabel, BorderLayout.CENTER);
-                textPanel.setBorder(new EmptyBorder(0, 50, 0, 0));
-
-                if(i <= 2) {
-                    c.gridx = 0;
-                    c.gridy = i;
-                } else {
-                    c.gridx = 1;
-                    c.gridy = i - 3;
-                }
-                cartPanel.add(textPanel, c);
-                i++;
+        // adding foodPanels to main panel in two rows
+        for(int i = 0; i < foodPanels.length; i++){
+            if (i < 2) {
+                c.insets = new Insets(0, 20, 0, 0);
+            } else {
+                c.insets = new Insets(0, 0, 0, 0);
             }
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.gridx = i/2;
+            c.gridy = i%2 + 1;
+            panel.add(foodPanels[i], c);
         }
 
-        // Logo
-        JLabel imageLabel = new JLabel();
-        imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource("bakery.png")).
-                getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                if(JOptionPane.showConfirmDialog(null, "Are you sure you want to checkout?",
-                        "Checkout", JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
-                   sm.processTransaction(shoppingCart, "Y");
-
-                    Object[] options = {"OK"};
-                    int n = JOptionPane.showOptionDialog(frame,
-                            "Order confirmed! Curbside pickup will be ready within 15 mins.\n" +
-                                    "Have a nice day :)",
-                            "See you soon!",
-                            JOptionPane.PLAIN_MESSAGE,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]);
-                       frame.setVisible(false);
-                       frame.dispose();
-
-                } else{
-                    sm.processTransaction(shoppingCart, "N");
-                } // no option
-            }
-        });
-
-        c.gridx = 0;
-        c.gridy = 0;
-        receiptPanel.add(imageLabel, c);
-        c.gridy = 1;
-        receiptPanel.add(checkoutButton,c);
-
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridheight = 2;
-        c.gridwidth = 2;
-        panel.add(cartPanel, c);
-        c.gridx = 2;
-        c.gridwidth = 1;
-        panel.add(receiptPanel, c);
         return panel;
     }
 
-    private JPanel checkoutPage(StoreManager sm) {
-        JButton continueButton = new JButton("Continue Shopping");
-        JLabel cartIdLabel = new JLabel("Cart ID: 0" + this.cartID);
-
-        JPanel panel = new JPanel(new GridBagLayout());
-
-        continueButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                cardsLayout.previous(parentPanel); // go to previous page
-            }
-        });
-
-        GridBagConstraints c = new GridBagConstraints();    //  constraints
-
-        JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'><br>" +
-                "<p style=\"font-size:35px\">The Virtual Bakery</p><p style=font-size:25px>Checkout</p></div></html>");
-        JPanel topPanel = new JPanel(new BorderLayout(400, 0));
-        topPanel.add(titleLabel, BorderLayout.CENTER);
-        topPanel.add(continueButton, BorderLayout.LINE_END);
-        topPanel.add(cartIdLabel, BorderLayout.LINE_START);
-
-        JPanel receiptPanel = receiptPanel(sm);
-
-        JPanel tempPanel = new JPanel();
-
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 3;
-        c.anchor = GridBagConstraints.CENTER;
-        panel.add(topPanel, c);
-
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(0, 20, 0, 0);
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridheight = 2;
-        c.gridwidth = 2;
-        panel.add(receiptPanel, c);
-
-        c.insets = new Insets(0, 0, 0, 0);
-        c.gridx = 1;
-        c.gridy = 1;
-        panel.add(tempPanel, c);
-        c.gridy = 2;
-        panel.add(tempPanel, c);
-
-        c.gridx = 2;
-        c.gridy = 1;
-        panel.add(tempPanel, c);
-        c.gridy = 2;
-        panel.add(tempPanel, c);
-
-        return panel;
-    }
 
     /**
      * Displays a textual user interface and prompts user input
@@ -525,18 +424,18 @@ public class StoreView {
         }
         if (input.equalsIgnoreCase("V")) {
             System.out.println("---------------------- VIEW ----------------------");
-            storeManager.printCartItems(shoppingCart);
+            System.out.println(storeManager.printCartItems(shoppingCart));
             return false;
         }
 
         if (input.equalsIgnoreCase("C")) {
             System.out.println("-------------------- CHECKOUT --------------------");
-            storeManager.printCartItems(shoppingCart);
+            System.out.print(storeManager.printCartItems(shoppingCart));
             double checkoutTotal = 0;
             for (ProductStock item : shoppingCart.getCartItems()) {
                 checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
             }
-            System.out.println("Your total is: $" + checkoutTotal + "\n");
+            System.out.println(String.format("Your total is: $%.2f\n", checkoutTotal));
             System.out.println("Are you ready to checkout?");
             System.out.println("(Y)es\t(N)o\t(Q)uit");
             input = sc.nextLine();  // Read user input
@@ -557,11 +456,9 @@ public class StoreView {
 
         JPanel welcomePage = welcomePage();
         JPanel mainPage = sv1.mainPage(sm);     // GUI only supports one StoreView
-        JPanel checkoutPanel = sv1.checkoutPage(sm);
 
         parentPanel.add(welcomePage);
         parentPanel.add(mainPage);
-        parentPanel.add(checkoutPanel);
 
         frame.add(parentPanel);
         frame.pack();

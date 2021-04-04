@@ -1,7 +1,7 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 3
+// Milestone 4
 
 package store;
 
@@ -76,11 +76,11 @@ public class StoreManager {
     }
 
 
-
     /**
-     * Calculates total cost of items in shoppingCart and displays it. Awaits user input to checkout, continue shopping,
-     * or quit. If a user decides to quit, all items are returned to inventory
+     * Given user input, prompts to checkout, continue shopping, or quit. If a user decides to quit,
+     * all items are returned to inventory
      * @param shoppingCart instance of shoppingCart class
+     * @param input String input of user
      * @return boolean true if transaction is completed successfully or if user decides to quit, either way indicates
      * user has left the store, otherwise returns false
      */
@@ -130,17 +130,20 @@ public class StoreManager {
 
 
     /**
-     * Prints all products in the shopping cart and their respective quantities
+     * Gets all products in the shopping cart and their respective quantities in String
      * @param shoppingCart instance of shoppingCart class
+     * @return String representation of cart items
      */
-    public void printCartItems(ShoppingCart shoppingCart) {
-        System.out.println("------------------ Shopping Cart -----------------");
-        System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "Product", "" + "Unit Price", "\t\tAmount");
+    public String printCartItems(ShoppingCart shoppingCart) {
+        String string = "";
+        string += String.format("------------------ Shopping Cart -----------------\n");
+        string += String.format("(%s) %-22s $%s %s\n", "#",
+                "Product", "" + "Unit Price", "     Amount");
         for (ProductStock item : shoppingCart.getCartItems()) {
-            System.out.printf("(%d) %-22s $%.2f\t\t\t%02d\n", item.getProductID(),
+            string += String.format("(%d) %-22s $%.2f            %02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
-        System.out.println("");
+        string += "\n";
+        return string;
     }
 }
