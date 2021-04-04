@@ -132,7 +132,7 @@ public class StoreManager {
      * @param shoppingCart instance of shoppingCart class
      * @return String representation of cart items
      */
-    public String printCartItems(ShoppingCart shoppingCart) {
+    public String stringCartItems(ShoppingCart shoppingCart) {
         String string = "";
         string += String.format("------------------ Shopping Cart -----------------\n");
         string += String.format("(%s) %-22s $%s %s\n", "#",

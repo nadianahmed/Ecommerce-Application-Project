@@ -274,7 +274,7 @@ public class StoreView {
             public void actionPerformed(ActionEvent ae) {
                 Object[] options1 = {"Checkout", "Continue Shopping", "Quit"};
                 int response1 = JOptionPane.showOptionDialog(parentPanel,
-                                sm.printCartItems(shoppingCart),
+                                sm.stringCartItems(shoppingCart),
                                 "My Cart",
                                 JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.QUESTION_MESSAGE,
@@ -408,7 +408,7 @@ public class StoreView {
         if (input.equalsIgnoreCase("R")) {
             System.out.println("---------------- REMOVE FROM CART ----------------");
             try {
-                storeManager.printCartItems(this.shoppingCart);
+                storeManager.stringCartItems(this.shoppingCart);
                 System.out.println("Option #: ");
                 int id = Integer.parseInt(sc.nextLine());
 
@@ -424,13 +424,13 @@ public class StoreView {
         }
         if (input.equalsIgnoreCase("V")) {
             System.out.println("---------------------- VIEW ----------------------");
-            System.out.println(storeManager.printCartItems(shoppingCart));
+            System.out.println(storeManager.stringCartItems(shoppingCart));
             return false;
         }
 
         if (input.equalsIgnoreCase("C")) {
             System.out.println("-------------------- CHECKOUT --------------------");
-            System.out.print(storeManager.printCartItems(shoppingCart));
+            System.out.print(storeManager.stringCartItems(shoppingCart));
             double checkoutTotal = 0;
             for (ProductStock item : shoppingCart.getCartItems()) {
                 checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
