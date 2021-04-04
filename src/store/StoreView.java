@@ -73,7 +73,7 @@ public class StoreView {
      */
     public static Inventory bakeryInventory() {
 
-        Product croissant = new Product("Butter Croissant", 01, 3.25, "croissant.png");  // creating each new product
+        Product croissant = new Product("Croissant", 01, 3.25, "croissant.png");  // creating each new product
         Product baguette = new Product("Baguette", 02, 3.90, "baguette.png");
         Product cheesecake = new Product("Cheesecake", 03, 4.15, "cheesecake.jpeg");
         Product banana = new Product("Banana Bread", 04, 2.75, "banana.png");
@@ -199,7 +199,7 @@ public class StoreView {
 
     /**
      * Private helper method to make the JPanel layout for every product in a given StoreManager's Inventory
-     * Creates JPanels with an title, an image, product info, and add/remove buttons
+     * Creates JPanels with a title, an image, product info, and add/remove buttons
      * @param sm StoreManager instance
      * @return JPanel[] array of JPanels
      */

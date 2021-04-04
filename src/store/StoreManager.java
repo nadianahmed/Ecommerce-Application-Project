@@ -115,9 +115,7 @@ public class StoreManager {
      */
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
-
-        String[] inventoryStocks = new String[this.inventory.getProductStocks().size()];
-
+        
         System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
