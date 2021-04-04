@@ -84,19 +84,7 @@ public class StoreManager {
      * @return boolean true if transaction is completed successfully or if user decides to quit, either way indicates
      * user has left the store, otherwise returns false
      */
-    public boolean processTransaction(ShoppingCart shoppingCart, Scanner sc) {
-        this.printCartItems(shoppingCart);
-
-        double checkoutTotal = 0;
-        for (ProductStock item : shoppingCart.getCartItems()) {
-            checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
-        }
-        System.out.println("Your total is: $" + checkoutTotal + "\n");
-        System.out.println("Are you ready to checkout?");
-        System.out.println("(Y)es\t(N)o\t(Q)uit");
-
-
-        String input = sc.nextLine();  // Read user input
+    public boolean processTransaction(ShoppingCart shoppingCart, String input) {
 
         if (input.equalsIgnoreCase("Y")) {
             System.out.println("Proceeding to checkout");
@@ -117,7 +105,7 @@ public class StoreManager {
             return true;
         }
         System.out.println("ERROR: Unrecognized input. Try again.");
-        this.processTransaction(shoppingCart, sc);
+        this.processTransaction(shoppingCart, input);
         return false;
     }
 

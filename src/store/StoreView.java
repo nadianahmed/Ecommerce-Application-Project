@@ -21,9 +21,9 @@ public class StoreView {
     private StoreManager storeManager;
     private ShoppingCart shoppingCart;
     private int cartID;
+    private static JFrame frame;
     private static CardLayout cardsLayout = new CardLayout();
     private static JPanel parentPanel = new JPanel(cardsLayout);
-    private static int choice;
 
     /**
      * StoreView Constructor
@@ -263,6 +263,16 @@ public class StoreView {
             }
         });
 
+        cartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                parentPanel.remove(2);
+                JPanel checkoutPanel = checkoutPage(sm);
+                parentPanel.add(checkoutPanel);
+                cardsLayout.last(parentPanel); // go to previous page
+            }
+        });
+
         GridBagConstraints c = new GridBagConstraints();    // welcomeLabel constraints
 
         JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'>" +
@@ -277,7 +287,7 @@ public class StoreView {
         c.weightx = 0.5;
         c.weighty = 0.5;
         c.gridx = 0;
-        c.gridx = 0;
+        c.gridy = 0;
         c.gridwidth = 3;
         c.anchor = GridBagConstraints.CENTER;
         panel.add(titlePanel, c);
@@ -303,6 +313,158 @@ public class StoreView {
         panel.add(foodPanels[4], c);
         c.gridy = 2;
         panel.add(foodPanels[5], c);
+
+        return panel;
+    }
+
+    private JPanel receiptPanel(StoreManager sm) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        JPanel cartPanel = new JPanel(new GridBagLayout());
+        JPanel receiptPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        Inventory inv = sm.getInventory();
+
+        int i = 0;
+        // check if each item in inv is in this cart
+        for (ProductStock prodStock : inv.getProductStocks()) {
+            System.out.println("I AM I THE LOOP");
+            if (shoppingCart.getQuantity(prodStock.getProductID()) > 0) {
+                System.out.println("I AM  THE F");
+                Product prod = prodStock.getProduct();
+                JPanel textPanel = new JPanel(new BorderLayout());
+
+                // JLabel for product info (price and stock)
+                JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:15px\"><br>%s</p><p style=\"font-size:12px\">$%.2f<br><br>Quantity: %d<br><br></p></html>",
+                        prod.getName(),prod.getPrice(), shoppingCart.getQuantity(prodStock.getProductID())));
+                textLabel.setBorder(new EmptyBorder(10, 10, 10, 0));
+                textLabel.setPreferredSize(new Dimension(350, 150));
+
+                // JLabel for product image
+                JLabel imageLabel = new JLabel();
+                imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(prod.getPictureFile())).
+                        getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+
+
+                textPanel.add(imageLabel, BorderLayout.LINE_START);
+                textPanel.add(textLabel, BorderLayout.CENTER);
+                textPanel.setBorder(new EmptyBorder(0, 50, 0, 0));
+
+                if(i <= 2) {
+                    c.gridx = 0;
+                    c.gridy = i;
+                } else {
+                    c.gridx = 1;
+                    c.gridy = i - 3;
+                }
+                cartPanel.add(textPanel, c);
+                i++;
+            }
+        }
+
+        // Logo
+        JLabel imageLabel = new JLabel();
+        imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource("bakery.png")).
+                getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(JOptionPane.showConfirmDialog(null, "Are you sure you want to checkout?",
+                        "Checkout", JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
+                   sm.processTransaction(shoppingCart, "Y");
+
+                    Object[] options = {"OK"};
+                    int n = JOptionPane.showOptionDialog(frame,
+                            "Order confirmed! Curbside pickup will be ready within 15 mins.\n" +
+                                    "Have a nice day :)",
+                            "See you soon!",
+                            JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
+                       frame.setVisible(false);
+                       frame.dispose();
+
+                } else{
+                    sm.processTransaction(shoppingCart, "N");
+                } // no option
+            }
+        });
+
+        c.gridx = 0;
+        c.gridy = 0;
+        receiptPanel.add(imageLabel, c);
+        c.gridy = 1;
+        receiptPanel.add(checkoutButton,c);
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 2;
+        c.gridwidth = 2;
+        panel.add(cartPanel, c);
+        c.gridx = 2;
+        c.gridwidth = 1;
+        panel.add(receiptPanel, c);
+        return panel;
+    }
+
+    private JPanel checkoutPage(StoreManager sm) {
+        JButton continueButton = new JButton("Continue Shopping");
+        JLabel cartIdLabel = new JLabel("Cart ID: 0" + this.cartID);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        continueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cardsLayout.previous(parentPanel); // go to previous page
+            }
+        });
+
+        GridBagConstraints c = new GridBagConstraints();    //  constraints
+
+        JLabel titleLabel = new JLabel("<html><div face='Georgia' style='text-align: center;'><br>" +
+                "<p style=\"font-size:35px\">The Virtual Bakery</p><p style=font-size:25px>Checkout</p></div></html>");
+        JPanel topPanel = new JPanel(new BorderLayout(400, 0));
+        topPanel.add(titleLabel, BorderLayout.CENTER);
+        topPanel.add(continueButton, BorderLayout.LINE_END);
+        topPanel.add(cartIdLabel, BorderLayout.LINE_START);
+
+        JPanel receiptPanel = receiptPanel(sm);
+
+        JPanel tempPanel = new JPanel();
+
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        c.anchor = GridBagConstraints.CENTER;
+        panel.add(topPanel, c);
+
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(0, 20, 0, 0);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 2;
+        c.gridwidth = 2;
+        panel.add(receiptPanel, c);
+
+        c.insets = new Insets(0, 0, 0, 0);
+        c.gridx = 1;
+        c.gridy = 1;
+        panel.add(tempPanel, c);
+        c.gridy = 2;
+        panel.add(tempPanel, c);
+
+        c.gridx = 2;
+        c.gridy = 1;
+        panel.add(tempPanel, c);
+        c.gridy = 2;
+        panel.add(tempPanel, c);
 
         return panel;
     }
@@ -369,7 +531,16 @@ public class StoreView {
 
         if (input.equalsIgnoreCase("C")) {
             System.out.println("-------------------- CHECKOUT --------------------");
-            return storeManager.processTransaction(shoppingCart, sc);
+            storeManager.printCartItems(shoppingCart);
+            double checkoutTotal = 0;
+            for (ProductStock item : shoppingCart.getCartItems()) {
+                checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
+            }
+            System.out.println("Your total is: $" + checkoutTotal + "\n");
+            System.out.println("Are you ready to checkout?");
+            System.out.println("(Y)es\t(N)o\t(Q)uit");
+            input = sc.nextLine();  // Read user input
+            return storeManager.processTransaction(shoppingCart, input);
         }
         return false;
     }
@@ -382,13 +553,15 @@ public class StoreView {
         StoreView sv2 = new StoreView(sm);
         StoreView sv3 = new StoreView(sm);
 
-        JFrame frame = initializeFrame(sm);
+        frame = initializeFrame(sm);
 
         JPanel welcomePage = welcomePage();
         JPanel mainPage = sv1.mainPage(sm);     // GUI only supports one StoreView
+        JPanel checkoutPanel = sv1.checkoutPage(sm);
 
         parentPanel.add(welcomePage);
         parentPanel.add(mainPage);
+        parentPanel.add(checkoutPanel);
 
         frame.add(parentPanel);
         frame.pack();
