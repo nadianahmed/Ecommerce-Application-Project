@@ -27,7 +27,7 @@ public class ShoppingCart {
      * cartItems accessor
      * @return ArrayList cartItems attribute of this instance
      */
-    public ArrayList<ProductStock> getCartItems() {return cartItems; }
+    public ArrayList<ProductStock> getCartItems() {return this.cartItems; }
 
     /**
      * Helper method, checks if product is in cart

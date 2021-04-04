@@ -18,6 +18,12 @@ public class StoreManager {
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
     /**
+     * Inventory accessor
+     * @return Inventory inventory attribute of this class
+     */
+    public Inventory getInventory() { return this.inventory; }
+
+    /**
      * Generates a unique cart ID incrementally
      * @return int cart ID
      */
@@ -94,7 +100,7 @@ public class StoreManager {
 
         if (input.equalsIgnoreCase("Y")) {
             System.out.println("Proceeding to checkout");
-            System.out.println("Order confirmed! Curbside pickup will be ready 15 within mins.");
+            System.out.println("Order confirmed! Curbside pickup will be ready within 15 mins.");
             System.out.println("User has been disconnected. Have a nice day :)\n");
             return true;
         }
@@ -148,34 +154,5 @@ public class StoreManager {
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
         System.out.println("");
-    }
-
-    /**
-     * Gets price and stock of every product in inventory
-     * @return invStocks 2D array of stocks and prices
-     */
-    public float[][] getInventoryInfo() {
-        int n = inventory.getProductStocks().size();
-        float[][] invInfo = new float[n][2];
-        for (int i = 0; i < n; i++) {
-            invInfo[i][0] = inventory.getProductStocks().get(i).getQuantity();
-            invInfo[i][1] = (float) inventory.getProductStocks().get(i).getPrice();
-        }
-        return invInfo;
-    }
-
-    /**
-     * Gets price of every product in cart
-     * @return cartAmount array of stocks
-     */
-    public int[] getCartInfo(ShoppingCart shoppingCart) {
-        int n = inventory.getProductStocks().size();
-        int[] cartAmount = new int[n];
-        int i = 0;
-        for (ProductStock item : this.inventory.getProductStocks()) {
-            cartAmount[i] = shoppingCart.getQuantity(item.getProductID());
-            i++;
-        }
-        return cartAmount;
     }
 }

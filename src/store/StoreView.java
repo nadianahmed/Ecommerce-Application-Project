@@ -67,12 +67,12 @@ public class StoreView {
      */
     public static Inventory bakeryInventory() {
 
-        Product croissant = new Product("Butter Croissant", 01, 3.25);  // creating each new product
-        Product baguette = new Product("Baguette", 02, 3.90);
-        Product cheesecake = new Product("Cheesecake", 03, 4.15);
-        Product banana = new Product("Banana Bread", 04, 2.75);
-        Product sourdough = new Product("Sourdough Loaf", 05, 3.50);
-        Product focaccia = new Product("Focaccia", 06, 3.25);
+        Product croissant = new Product("Butter Croissant", 01, 3.25, "croissant.png");  // creating each new product
+        Product baguette = new Product("Baguette", 02, 3.90, "baguette.png");
+        Product cheesecake = new Product("Cheesecake", 03, 4.15, "cheesecake.jpeg");
+        Product banana = new Product("Banana Bread", 04, 2.75, "banana.png");
+        Product sourdough = new Product("Sourdough Loaf", 05, 3.50, "sourdough.png");
+        Product focaccia = new Product("Focaccia", 06, 3.25, "focaccia.png");
 
 
         ArrayList<ProductStock> bakeryStock = new ArrayList<ProductStock>();
@@ -134,28 +134,37 @@ public class StoreView {
         return welcomePanel;
     }
 
+    /**
+     * Private helper method that manages the JPanel layout for a given Product
+     * @param id int for desired product
+     * @param sm StoreManager instance
+     * @param textLabel JLabel containing product info
+     * @return
+     */
     private JPanel makeButtonPanel(int id, StoreManager sm, JLabel textLabel) {
         int i = id - 1; // index for getCartInfo
+        Inventory inv = sm.getInventory();
+        Product prod = inv.getProductInfo(id);
+
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton plusButton = new JButton("+");
         JButton minusButton = new JButton("-");
         minusButton.setEnabled(false);
 
-        int currVal = sm.getCartInfo(this.shoppingCart)[i];
-        JLabel countLabel = new JLabel(String.valueOf(currVal));
+        JLabel countLabel = new JLabel("0"); // cart always starts off empty
 
         plusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 plusButton.setEnabled(true);
                 storeManager.addItem(shoppingCart, id, 1);
-                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1));
+                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                        sm.getInventoryInfo()[i][1], (int)sm.getInventoryInfo()[i][0]));
-                if (sm.getInventoryInfo()[i][0] <= 0) {
+                                                 prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
+                if (inv.getStock(prod.getId()) <= 0) {
                     plusButton.setEnabled(false);
                 }
-                if (sm.getCartInfo(shoppingCart)[i] > 0) {
+                if (shoppingCart.getQuantity(id) > 0) {
                     minusButton.setEnabled(true);
                 }
             }
@@ -165,13 +174,13 @@ public class StoreView {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 storeManager.removeItem(shoppingCart, id, 1);
-                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) - 1));
+                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) - 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                        sm.getInventoryInfo()[i][1], (int)sm.getInventoryInfo()[i][0]));
-                if (sm.getInventoryInfo()[i][0] > 0) {
+                                                 prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
+                if (inv.getStock(prod.getId()) > 0) {
                     plusButton.setEnabled(true);
                 }
-                if (sm.getCartInfo(shoppingCart)[i] < 1) {
+                if (shoppingCart.getQuantity(id) < 1) {
                     minusButton.setEnabled(false);
                 }
             }
@@ -180,41 +189,49 @@ public class StoreView {
         buttonPanel.add(minusButton);
         buttonPanel.add(countLabel);
         buttonPanel.add(plusButton);
-
         return buttonPanel;
     }
 
+    /**
+     * Private helper method to make the JPanel layout for every product in a given StoreManager's Inventory
+     * @param sm StoreManager instance
+     * @return JPanel[] array of JPanels
+     */
     private JPanel[] makeFoodPanels(StoreManager sm) {
-        JPanel[] foodPanels = new JPanel[6];
-        String[] foodPics = {"croissant.png", "baguette.png", "cheesecake.jpeg",
-                                "banana.png", "sourdough.png", "focaccia.png"};
-        String[] foodNames = {"Croissant", "Baguette", "Cheesecake", "Banana Bread", "Sourdough Loaf", "Focaccia"};
 
-        float[][] foodInfo = sm.getInventoryInfo(); // prices and stock
+        Inventory inv = sm.getInventory();
+        JPanel[] foodPanels = new JPanel[inv.getProductStocks().size()];
 
-        for (int i = 0; i < 6; i++) {
+        // set up a JPanel for each product
+        for (int i = 0; i < inv.getProductStocks().size(); i++) {
+            Product prod = inv.getProductStocks().get(i).getProduct(); // ith prod in inventory
+
             JPanel bigPanel = new JPanel(new GridBagLayout());
             JPanel textPanel = new JPanel(new BorderLayout());
 
-            JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                                                                        foodInfo[i][1], (int)foodInfo[i][0]));
-            textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
-
-            JPanel buttonPanel = makeButtonPanel(i + 1, sm, textLabel);
-
-            JLabel productLabel = new JLabel(String.format("<html><p style=\"font-size:21px\"><br><br>%s</p></html>", foodNames[i]));
+            // JLabel for product name (title)
+            JLabel productLabel = new JLabel(String.format("<html><p style=\"font-size:21px\"><br><br>%s</p></html>",
+                                                              prod.getName()));
             productLabel.setBorder(new EmptyBorder(0, 10, 10, 0));
 
+            // JLabel for product info (price and stock)
+            JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
+                                                            prod.getPrice(), inv.getStock(prod.getId())));
+            textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
+
+            // JLabel for product image
             JLabel imageLabel = new JLabel();
-            imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(foodPics[i])).
+            imageLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(StoreView.class.getResource(prod.getPictureFile())).
                     getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
 
-            GridBagConstraints c = new GridBagConstraints();    // bigPanel constraints
+            // JPanel with add/remove buttons and counter
+            JPanel buttonPanel = makeButtonPanel(prod.getId(), sm, textLabel);
 
             textPanel.add(productLabel, BorderLayout.PAGE_START);
             textPanel.add(textLabel, BorderLayout.CENTER);
             textPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
+            GridBagConstraints c = new GridBagConstraints();    // bigPanel constraints
             c.gridx = 0;
             bigPanel.add(imageLabel, c);
             c.gridx = 1;
@@ -226,6 +243,12 @@ public class StoreView {
         return foodPanels;
     }
 
+    /**
+     * Private helper method to make the JPanel layout for the programs "main page"
+     * (Precondition: that the given sm's inventory contains less than 6 products)
+     * @param sm StoreManager instance
+     * @return JPanel for the program's "main page"
+     */
     private JPanel mainPage(StoreManager sm) {
 
         JButton backButton = new JButton("Back");
@@ -236,7 +259,7 @@ public class StoreView {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                cardsLayout.first(parentPanel);
+                cardsLayout.first(parentPanel); // go to previous page
             }
         });
 
