@@ -3,7 +3,8 @@
 // Esraa Alaa Aldeen 101151604
 // Milestone 4
 
-package store;
+package myStore;
+
 import java.util.ArrayList;
 
 public class Inventory {

@@ -3,17 +3,15 @@
 // Esraa Alaa Aldeen 101151604
 // Milestone 4
 
-package store;
-
-import java.util.Scanner;
+package myStore;
 
 public class StoreManager {
     private Inventory inventory;
     private int lastCartID = 0;
 
     /**
-     * store.StoreManager constructor
-     * @param inventory instance of store.Inventory class
+     * myStore.StoreManager constructor
+     * @param inventory instance of myStore.Inventory class
      */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
 
@@ -37,7 +35,7 @@ public class StoreManager {
      * and removes that amount from the inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param productID int unique id for instance of store.Product class
+     * @param productID int unique id for instance of myStore.Product class
      * @param quantity int quantity to be added
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {

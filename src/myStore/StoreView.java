@@ -3,7 +3,7 @@
 // Esraa Alaa Aldeen 101151604
 // Milestone 4
 
-package store;
+package myStore;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

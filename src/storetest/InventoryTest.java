@@ -5,7 +5,10 @@
 
 package storetest;
 
-import store.*;
+import myStore.Inventory;
+import myStore.Product;
+import myStore.ProductStock;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 

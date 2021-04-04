@@ -3,7 +3,7 @@
 // Esraa Alaa Aldeen 101151604
 // Milestone 4
 
-package store;
+package myStore;
 
 public class Product {
     private  String name;
