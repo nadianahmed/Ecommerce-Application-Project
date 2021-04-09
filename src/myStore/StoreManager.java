@@ -1,21 +1,25 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 3
+// Milestone 5
 
-package store;
-
-import java.util.Scanner;
+package myStore;
 
 public class StoreManager {
     private Inventory inventory;
     private int lastCartID = 0;
 
     /**
-     * store.StoreManager constructor
-     * @param inventory instance of store.Inventory class
+     * myStore.StoreManager constructor
+     * @param inventory instance of myStore.Inventory class
      */
     public StoreManager(Inventory inventory) { this.inventory = inventory; }
+
+    /**
+     * Inventory accessor
+     * @return Inventory inventory attribute of this class
+     */
+    public Inventory getInventory() { return this.inventory; }
 
     /**
      * Generates a unique cart ID incrementally
@@ -31,12 +35,12 @@ public class StoreManager {
      * and removes that amount from the inventory if inventory is sufficient,
      * otherwise no change
      * @param shoppingCart instance of shoppingCart class
-     * @param productID int unique id for instance of store.Product class
+     * @param productID int unique id for instance of myStore.Product class
      * @param quantity int quantity to be added
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {
 
-        if (!inventory.inInventory(productID)) {
+        if (!inventory.isAvailable(productID)) {
             System.out.println("Cannot add to cart. This item is not in our inventory.");
             return;
         }
@@ -45,9 +49,9 @@ public class StoreManager {
             return;
         }
         Product product = inventory.getProductInfo(productID);
-        if (inventory.getStock(productID) >= quantity) {
-            shoppingCart.addToCart(product, quantity);
-            inventory.removeStock(productID, quantity);
+        if (inventory.getProductQuantity(productID) >= quantity) {
+            shoppingCart.addProductQuantity(product, quantity);
+            inventory.removeProductQuantity(productID, quantity);
             System.out.println(quantity + " "
                     + product.getName()
                     + "(s) was added to your cart.");
@@ -64,38 +68,25 @@ public class StoreManager {
      * @param quantity int quantity to be added
      */
     public void removeItem(ShoppingCart shoppingCart, int id, int quantity) {
-        if (shoppingCart.removeFromCart(id, quantity)) {
-            inventory.addStock(inventory.getProductInfo(id), quantity);
+        if (shoppingCart.removeProductQuantity(id, quantity)) {
+            inventory.addProductQuantity(inventory.getProductInfo(id), quantity);
         } else return;
     }
 
 
-
     /**
-     * Calculates total cost of items in shoppingCart and displays it. Awaits user input to checkout, continue shopping,
-     * or quit. If a user decides to quit, all items are returned to inventory
+     * Given user input, prompts to checkout, continue shopping, or quit. If a user decides to quit,
+     * all items are returned to inventory
      * @param shoppingCart instance of shoppingCart class
+     * @param input String input of user
      * @return boolean true if transaction is completed successfully or if user decides to quit, either way indicates
      * user has left the store, otherwise returns false
      */
-    public boolean processTransaction(ShoppingCart shoppingCart) {
-        this.printCartItems(shoppingCart);
-        Scanner sc = new Scanner(System.in);
-
-        double checkoutTotal = 0;
-        for (ProductStock item : shoppingCart.getCartItems()) {
-            checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
-        }
-        System.out.println("Your total is: $" + checkoutTotal + "\n");
-        System.out.println("Are you ready to checkout?");
-        System.out.println("(Y)es\t(N)o\t(Q)uit");
-
-
-        String input = sc.nextLine();  // Read user input
+    public boolean processTransaction(ShoppingCart shoppingCart, String input) {
 
         if (input.equalsIgnoreCase("Y")) {
             System.out.println("Proceeding to checkout");
-            System.out.println("Order confirmed! Curbside pickup will be ready 15 within mins.");
+            System.out.println("Order confirmed! Curbside pickup will be ready within 15 mins.");
             System.out.println("User has been disconnected. Have a nice day :)\n");
             return true;
         }
@@ -104,7 +95,7 @@ public class StoreManager {
             return false;
         }
         else if (input.equalsIgnoreCase("Q")) {
-            for (ProductStock item : shoppingCart.getCartItems()) {
+            for (ProductStock item : shoppingCart.getProductStocks()) {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
             }
             System.out.println("Cart reset.");
@@ -112,7 +103,7 @@ public class StoreManager {
             return true;
         }
         System.out.println("ERROR: Unrecognized input. Try again.");
-        this.processTransaction(shoppingCart);
+        this.processTransaction(shoppingCart, input);
         return false;
     }
 
@@ -122,7 +113,7 @@ public class StoreManager {
      */
     public void printInventory() {
         System.out.println("--------------- " + inventory.getStoreName() + " ---------------");
-
+        
         System.out.printf("(#) %-22s $Unit Price  \t Stock\n", "Product");
         for (ProductStock item : this.inventory.getProductStocks()) {
             if (item.getQuantity() > 0) {               // will only display items with available quantity in inventory
@@ -135,17 +126,20 @@ public class StoreManager {
 
 
     /**
-     * Prints all products in the shopping cart and their respective quantities
+     * Gets all products in the shopping cart and their respective quantities in String
      * @param shoppingCart instance of shoppingCart class
+     * @return String representation of cart items
      */
-    public void printCartItems(ShoppingCart shoppingCart) {
-        System.out.println("------------------ Shopping Cart -----------------");
-        System.out.printf("(%s) %-22s $%s %s\n", "#",
-                "Product", "" + "Unit Price", "\t\tAmount");
-        for (ProductStock item : shoppingCart.getCartItems()) {
-            System.out.printf("(%d) %-22s $%.2f\t\t\t%02d\n", item.getProductID(),
+    public String stringCartItems(ShoppingCart shoppingCart) {
+        String string = "";
+        string += String.format("------------------ Shopping Cart -----------------\n");
+        string += String.format("(%s) %-22s $%s %s\n", "#",
+                "Product", "" + "Unit Price", "     Amount");
+        for (ProductStock item : shoppingCart.getProductStocks()) {
+            string += String.format("(%d) %-22s $%.2f            %02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
-        System.out.println("");
+        string += "\n";
+        return string;
     }
 }

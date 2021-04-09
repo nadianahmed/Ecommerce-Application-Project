@@ -1,9 +1,9 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 3
+// Milestone 5
 
-package store;
+package myStore;
 
 public class ProductStock {
     private Product product;
