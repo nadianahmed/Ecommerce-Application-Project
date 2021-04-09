@@ -1,15 +1,15 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 4
+// Milestone 5
 
 package myStore;
 
 import java.util.ArrayList;
 
-public class Inventory {
+public class Inventory extends ProductStockContainer {
 
-    private ArrayList<ProductStock> productStocks;
+  //  private ArrayList<ProductStock> productStocks;
     private String storeName; // Name of the store containing this inventory
 
     /**
@@ -39,64 +39,27 @@ public class Inventory {
     }
 
     /**
-     * Helper method, checks if product is in inventory, given ID
-     * @param id int id for product
-     * @return true if the product is in inventory, false otherwise
-     */
-    public boolean inInventory(int id) {
-        for (ProductStock productStock : productStocks) {
-            int productID = productStock.getProductID();
-            if (productID == id) { return true; }
-        } return false;
-    }
-
-
-    /**
-     * Finds the index i of a product in productStocks ArrayList
-     * @param id int id for product
-     * @return int index i
-     */
-    private int findPlace(int id) {
-        if (inInventory(id)) {
-            for (int i = 0; i < productStocks.size(); i++) {
-                int productID = productStocks.get(i).getProductID();
-                if (id == productID) { return i; }
-            }
-        }
-        return -1;                                                      // Return -1 if id is invalid
-    }
-
-    /**
-     * Gets quantity for a product, given its id
-     * @param id int id for product
-     * @return int quantity of products if in inventory, -1 otherwise
-     */
-    public int getStock(int id) {
-        if (inInventory(id)) {
-            int i = this.findPlace(id);
-            return (productStocks.get(i).getQuantity());
-        } else {
-            return -1;
-        }
-    }
-
-    /**
      * Removes an amount of stock from inventory for a specific product
      * @param id int id for product
      * @param quantity int quantity to be removed
+     * @return boolean true if removed, false otherwise
      */
-    public void removeStock(int id, int quantity) {
-        if (inInventory(id)){
-            int i = findPlace(id);
+    @Override
+    public boolean removeProductQuantity(int id, int quantity) {
+        if (isAvailable(id)){
+            int i = find(id);
             if (quantity <= 0) {
                 System.out.println("Insufficient stock in inventory. No products were removed.");
-                return;                               // removes stock iff inventory is sufficient
+                return false;                               // removes stock iff inventory is sufficient
             } else {
                 int newQuantity = productStocks.get(i).getQuantity() - quantity;
                 productStocks.get(i).setQuantity(newQuantity);
                 System.out.println(quantity + " " + getProductInfo(id).getName() +"(s) were removed from inventory.");
+                return true;
             }
-        } else { System.out.println("This product is not in our inventory.");}
+        } else {
+            System.out.println("This product is not in our inventory.");
+            return false;   }
     }
 
     /**
@@ -105,9 +68,10 @@ public class Inventory {
      * @param product instance of Product class
      * @param quantity int quantity to be added
      */
-    public void addStock(Product product, int quantity) {
-        if (inInventory(product.getId())) {                     // iff products exists in inventory, we add new quantity
-            int i = findPlace(product.getId());
+    @Override
+    public void addProductQuantity(Product product, int quantity) {
+        if (isAvailable(product.getId())) {                     // iff products exists in inventory, we add new quantity
+            int i = find(product.getId());
             int newQuantity = productStocks.get(i).getQuantity() + quantity;
             productStocks.get(i).setQuantity(newQuantity);
         } else if (quantity >= 1                                     // New products must have quantity greater than 0,
@@ -122,8 +86,8 @@ public class Inventory {
      * @return instance of Product class
      */
     public Product getProductInfo(int id) {
-        if (inInventory(id)) {
-            int i = findPlace(id);
+        if (isAvailable(id)) {
+            int i = find(id);
             return productStocks.get(i).getProduct();
         } else {
             return null;

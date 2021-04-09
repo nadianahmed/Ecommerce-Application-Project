@@ -1,7 +1,7 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 4
+// Milestone 5
 
 package myStore;
 
@@ -40,7 +40,7 @@ public class StoreManager {
      */
     public void addItem(ShoppingCart shoppingCart, int productID, int quantity) {
 
-        if (!inventory.inInventory(productID)) {
+        if (!inventory.isAvailable(productID)) {
             System.out.println("Cannot add to cart. This item is not in our inventory.");
             return;
         }
@@ -49,9 +49,9 @@ public class StoreManager {
             return;
         }
         Product product = inventory.getProductInfo(productID);
-        if (inventory.getStock(productID) >= quantity) {
-            shoppingCart.addToCart(product, quantity);
-            inventory.removeStock(productID, quantity);
+        if (inventory.getProductQuantity(productID) >= quantity) {
+            shoppingCart.addProductQuantity(product, quantity);
+            inventory.removeProductQuantity(productID, quantity);
             System.out.println(quantity + " "
                     + product.getName()
                     + "(s) was added to your cart.");
@@ -68,8 +68,8 @@ public class StoreManager {
      * @param quantity int quantity to be added
      */
     public void removeItem(ShoppingCart shoppingCart, int id, int quantity) {
-        if (shoppingCart.removeFromCart(id, quantity)) {
-            inventory.addStock(inventory.getProductInfo(id), quantity);
+        if (shoppingCart.removeProductQuantity(id, quantity)) {
+            inventory.addProductQuantity(inventory.getProductInfo(id), quantity);
         } else return;
     }
 
@@ -95,7 +95,7 @@ public class StoreManager {
             return false;
         }
         else if (input.equalsIgnoreCase("Q")) {
-            for (ProductStock item : shoppingCart.getCartItems()) {
+            for (ProductStock item : shoppingCart.getProductStocks()) {
                 removeItem(shoppingCart, item.getProductID(), item.getQuantity());
             }
             System.out.println("Cart reset.");
@@ -135,7 +135,7 @@ public class StoreManager {
         string += String.format("------------------ Shopping Cart -----------------\n");
         string += String.format("(%s) %-22s $%s %s\n", "#",
                 "Product", "" + "Unit Price", "     Amount");
-        for (ProductStock item : shoppingCart.getCartItems()) {
+        for (ProductStock item : shoppingCart.getProductStocks()) {
             string += String.format("(%d) %-22s $%.2f            %02d\n", item.getProductID(),
                     item.getProductName(), item.getPrice(), item.getQuantity());
         }
