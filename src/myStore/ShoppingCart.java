@@ -8,7 +8,6 @@ package myStore;
 import java.util.ArrayList;
 
 public class ShoppingCart extends ProductStockContainer {
-   // private ArrayList<ProductStock> productStocks;
 
     /**
      * ShoppingCart constructor
@@ -32,19 +31,19 @@ public class ShoppingCart extends ProductStockContainer {
     /**
      * Removes an amount of stock from shopping cart for a specific product
      * if appropriate amount of product is in cart and returns true, otherwise returns false
-     * @param id int id for product
+     * @param product instance of Product class
      * @param quantity int quantity to be removed
      * @return true if items were successfully removed, false otherwise
      */
     @Override
-    public boolean removeProductQuantity(int id, int quantity) {
+    public boolean removeProductQuantity(Product product, int quantity) {
         if (quantity <= 0) {     // user cannot remove a negative number
             System.out.println("Cannot remove negative or zero amount.");
             return false;
         }
 
-        if (isAvailable(id)){
-            int i = find(id);
+        if (isAvailable(product.getId())){
+            int i = find(product.getId());
             int newQuantity = productStocks.get(i).getQuantity() - quantity;
             if (newQuantity < 0) {                     // removes stock iff new # items in inventory is non-negative
                 System.out.println("Your cart does not contain this many "
@@ -62,6 +61,17 @@ public class ShoppingCart extends ProductStockContainer {
             System.out.println("This product is not in your cart.");
             return false;
         }
+    }
+
+    /**
+     * Removes an amount of stock from shopping cart for a specific product
+     * if appropriate amount of product is in cart and returns true, otherwise returns false
+     * @param id int id for product
+     * @param quantity int quantity to be removed
+     * @return true if items were successfully removed, false otherwise
+     */
+    public boolean removeProductQuantity(int id, int quantity) {
+     return removeProductQuantity(getProductInfo(id), quantity);
     }
 
 

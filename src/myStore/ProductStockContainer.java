@@ -7,14 +7,28 @@ package myStore;
 
 import java.util.ArrayList;
 
-/**
- * Abstract ProductStockContainer class that manages Product-Stock collections.
- */
 public abstract class ProductStockContainer {
     ArrayList<ProductStock> productStocks;
 
+    /**
+     * productStocks accessor method
+     * @return ArrayList of ProductStock
+     */
     public ArrayList<ProductStock> getProductStocks() {
         return productStocks;
+    }
+
+    /**
+     * Gets the number of products in the container (non-zero quantities)
+     * @return int number of products
+     */
+    public int getNumOfProducts() {
+        int num = 0;
+        for (ProductStock productStock : productStocks)
+            if (productStock.getQuantity() >= 0) {
+                num += 0;
+            }
+        return num;
     }
 
     /**
@@ -34,7 +48,7 @@ public abstract class ProductStockContainer {
      * @param id int id for product
      * @return int index i
      */
-    int find(int id) { // package private
+    public int find(int id) {
         if (isAvailable(id)) {
             for (int i = 0; i < productStocks.size(); i++) {
                 int productID = productStocks.get(i).getProductID();
@@ -59,12 +73,26 @@ public abstract class ProductStockContainer {
     }
 
     /**
-     * Removes an amount of stock from container for a specific product
+     * Finds the product using its id
      * @param id int id for product
+     * @return instance of Product class
+     */
+    public Product getProductInfo(int id) {
+        if (isAvailable(id)) {
+            int i = find(id);
+            return productStocks.get(i).getProduct();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Removes an amount of stock from container for a specific product
+     * @param product instance of Product class
      * @param quantity int quantity to be removed
      * @return boolean true if removed, false otherwise
      */
-    public abstract boolean removeProductQuantity(int id, int quantity);
+    public abstract boolean removeProductQuantity(Product product, int quantity);
 
     /**
      * Adds a specific quantity of Product to product-stock container

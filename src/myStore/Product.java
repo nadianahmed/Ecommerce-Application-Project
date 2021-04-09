@@ -5,6 +5,7 @@
 
 package myStore;
 
+
 public class Product {
     private  String name;
     private  int id;
