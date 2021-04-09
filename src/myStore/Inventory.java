@@ -81,6 +81,7 @@ public class Inventory extends ProductStockContainer {
     public void addProductQuantity(Product product, int quantity) {
         if (isAvailable(product.getId())) {                     // iff products exists in inventory, we add new quantity
             int i = find(product.getId());
+
             int newQuantity = productStocks.get(i).getQuantity() + quantity;
             productStocks.get(i).setQuantity(newQuantity);
         } else if (quantity >= 1                                     // New products must have quantity greater than 0,
