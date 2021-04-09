@@ -83,31 +83,31 @@ public class StoreManagerTest {
 
         sm.addItem(sc1, 1, 1);
 
-        assertEquals(1, sc1.getProductQuantity(1), "Incorrect amount added to cart (addItem method bug)");
-        assertEquals(19, inv.getProductQuantity(1), "Incorrect removed from inventory when adding to cart (addItem method bug)");
+        assertEquals(1, sc1.getQuantity(1), "Incorrect amount added to cart (addItem method bug)");
+        assertEquals(19, inv.getStock(1), "Incorrect removed from inventory when adding to cart (addItem method bug)");
 
         sm.addItem(sc1, 1, 2);
-        assertEquals(3, sc1.getProductQuantity(1), "Incorrect amount in cart. " +
+        assertEquals(3, sc1.getQuantity(1), "Incorrect amount in cart. " +
                 "Amount is not added correctly to items already in inventory (addItem method bug)");
-        assertEquals(17, inv.getProductQuantity(1), "Incorrect removed from inventory when adding to cart " +
+        assertEquals(17, inv.getStock(1), "Incorrect removed from inventory when adding to cart " +
                 "a second time(addItem method bug)");
 
         sm.addItem(sc1, 2, 2);
-        assertEquals(2, sc1.getProductQuantity(2), "Incorrect amount added to cart " +
+        assertEquals(2, sc1.getQuantity(2), "Incorrect amount added to cart " +
                 "when dealing with multiple products (addItem method bug)");
-        assertEquals(12, inv.getProductQuantity(2), "Incorrect removed from inventory " +
+        assertEquals(12, inv.getStock(2), "Incorrect removed from inventory " +
                 "when adding second item to cart (addItem method bug)");
 
         sm.addItem(sc2, 3, 3);
-        assertEquals(3, sc2.getProductQuantity(3), "Incorrect amount added to cart " +
+        assertEquals(3, sc2.getQuantity(3), "Incorrect amount added to cart " +
                 "when dealing with multiple shopping carts (addItem method bug)");
-        assertEquals(7, inv.getProductQuantity(3), "Incorrect removed from inventory " +
+        assertEquals(7, inv.getStock(3), "Incorrect removed from inventory " +
                 "when dealing with multiple shopping carts (addItem method bug)");
 
         sm.addItem(sc1, 3, 3);
-        assertEquals(3, sc1.getProductQuantity(3), "Incorrect amount added to cart " +
+        assertEquals(3, sc1.getQuantity(3), "Incorrect amount added to cart " +
                 "when dealing with multiple products (addItem method bug)");
-        assertEquals(4, inv.getProductQuantity(3), "Incorrect removed from inventory " +
+        assertEquals(4, inv.getStock(3), "Incorrect removed from inventory " +
                 "when adding third item to cart (addItem method bug)");
     }
 
@@ -120,21 +120,21 @@ public class StoreManagerTest {
         sm.addItem(sc1, 1, 3);
 
         sm.addItem(sc1, 1, 0);
-        assertEquals(3, sc1.getProductStocks().get(0).getQuantity(), "Incorrect amount in cart. " +
+        assertEquals(3, sc1.getCartItems().get(0).getQuantity(), "Incorrect amount in cart. " +
                 "Zero amount should NOT be able to be added to cart (addItem method bug)");
-        assertEquals(17, inv.getProductQuantity(1), "Incorrect amount in inventory " +
+        assertEquals(17, inv.getStock(1), "Incorrect amount in inventory " +
                 "nothing should change when zero amount is added to cart (addItem method bug)");
 
         sm.addItem(sc1, 1, -1);
-        assertEquals(3, sc1.getProductStocks().get(0).getQuantity(), "Incorrect amount in cart. " +
+        assertEquals(3, sc1.getCartItems().get(0).getQuantity(), "Incorrect amount in cart. " +
                 "Negative amount should NOT be able to be added to cart (addItem method bug)");
-        assertEquals(17, inv.getProductQuantity(1), "Incorrect amount in inventory " +
+        assertEquals(17, inv.getStock(1), "Incorrect amount in inventory " +
                 "when adding negative amount to cart (addItem method bug)");
 
         sm.addItem(sc1, 4, 3);
-        assertEquals(-1, sc1.getProductQuantity(4), "Incorrect amount in cart. " +
+        assertEquals(-1, sc1.getQuantity(4), "Incorrect amount in cart. " +
                 "products not in inventory should NOT be able to be added to cart (addItem method bug)");
-        assertEquals(-1, inv.getProductQuantity(4), "Amount in inventory " +
+        assertEquals(-1, inv.getStock(4), "Amount in inventory " +
                 "should be -1 when product is not in inventory (addItem method bug)");
     }
 
@@ -150,33 +150,33 @@ public class StoreManagerTest {
         sm.addItem(sc2, 3, 3);
 
         sm.removeItem(sc1, 1, 1);
-        assertEquals(2, sc1.getProductQuantity(1), "Incorrect amount removed from inventory " +
+        assertEquals(2, sc1.getQuantity(1), "Incorrect amount removed from inventory " +
                 "(removeItem method bug)");
-        assertEquals(18, inv.getProductQuantity(1), "Incorrect returned to inventory " +
+        assertEquals(18, inv.getStock(1), "Incorrect returned to inventory " +
                 "(removeItem method bug)");
 
         sm.removeItem(sc1, 1, 1);
-        assertEquals(1, sc1.getProductQuantity(1), "Incorrect amount in cart " +
+        assertEquals(1, sc1.getQuantity(1), "Incorrect amount in cart " +
                 "when second amount is removed (removeItem method bug)");
-        assertEquals(19, inv.getProductQuantity(1), "Incorrect returned to inventory " +
+        assertEquals(19, inv.getStock(1), "Incorrect returned to inventory " +
                 "when second amount is removed (removeItem method bug)");
 
         sm.removeItem(sc1, 2, 2);
-        assertEquals(0, sc1.getProductQuantity(2), "Incorrect amount removed from cart " +
+        assertEquals(0, sc1.getQuantity(2), "Incorrect amount removed from cart " +
                 "when dealing with multiple products (removeItem method bug)");
-        assertEquals(14, inv.getProductQuantity(2), "Incorrect returned to inventory " +
+        assertEquals(14, inv.getStock(2), "Incorrect returned to inventory " +
                 "when dealing with multiple products (removeItem method bug)");
 
         sm.removeItem(sc2, 3, 3);
-        assertEquals(0, sc2.getProductQuantity(3), "Incorrect amount removed from cart " +
+        assertEquals(0, sc2.getQuantity(3), "Incorrect amount removed from cart " +
                 "when dealing with multiple shopping carts (removeItem method bug)");
-        assertEquals(7, inv.getProductQuantity(3), "Incorrect returned to inventory " +
+        assertEquals(7, inv.getStock(3), "Incorrect returned to inventory " +
                 "when dealing with multiple shopping carts (removeItem method bug)");
 
         sm.removeItem(sc1, 3, 3);
-        assertEquals(0, sc1.getProductQuantity(3), "Incorrect amount removed from cart " +
+        assertEquals(0, sc1.getQuantity(3), "Incorrect amount removed from cart " +
                 "when dealing with multiple products (removeItem method bug)");
-        assertEquals(10, inv.getProductQuantity(3), "Incorrect returned to inventory " +
+        assertEquals(10, inv.getStock(3), "Incorrect returned to inventory " +
                 "when dealing with multiple products (removeItem method bug)");
     }
 
@@ -189,11 +189,11 @@ public class StoreManagerTest {
         sm.addItem(sc1, 1, 3);
 
         sm.removeItem(sc1, 1, 0);
-        assertEquals(3, sc1.getProductQuantity(1), "Incorrect amount in cart. " +
+        assertEquals(3, sc1.getQuantity(1), "Incorrect amount in cart. " +
                 "Zero amount should NOT be able to be removed from inventory (removeItem method bug)");
 
         sm.removeItem(sc1, 3, -2);
-        assertEquals(3, sc1.getProductQuantity(1), "Incorrect amount in cart. " +
+        assertEquals(3, sc1.getQuantity(1), "Incorrect amount in cart. " +
                 "Negative amount should NOT be able to be removed from inventory (removeItem method bug)");
     }
 

@@ -1,7 +1,7 @@
 // Team Cup O' Java
 // Nadia Ahmed 101172713
 // Esraa Alaa Aldeen 101151604
-// Milestone 5
+// Milestone 4
 
 package myStore;
 
@@ -48,7 +48,7 @@ public class StoreView {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?")
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit?")
                         == JOptionPane.OK_OPTION) {
                     frame.setVisible(false);
                     frame.dispose();
@@ -165,11 +165,11 @@ public class StoreView {
                 storeManager.addItem(shoppingCart, id, 1);
                 countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                                                 prod.getPrice(), inv.getProductQuantity(prod.getId()))); // re-displays stock
+                                                 prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
 
                 minusButton.setEnabled(true);           // removing enabled (cart has > 0 items)
 
-                if (inv.getProductQuantity(prod.getId()) <= 0) {
+                if (inv.getStock(prod.getId()) <= 0) {
                     plusButton.setEnabled(false);       // adding disabled if inv insufficient
                 }
             }
@@ -181,11 +181,11 @@ public class StoreView {
                 storeManager.removeItem(shoppingCart, id, 1);
                 countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) - 1)); // re-displays counter
                 textLabel.setText(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                                                 prod.getPrice(), inv.getProductQuantity(prod.getId()))); // re-displays stock
+                                                 prod.getPrice(), inv.getStock(prod.getId()))); // re-displays stock
 
                 plusButton.setEnabled(true);            // adding enabled (inv becomes sufficient)
 
-                if (shoppingCart.getProductQuantity(id) < 1) {
+                if (shoppingCart.getQuantity(id) < 1) {
                     minusButton.setEnabled(false);      // removing disabled if cart has > 0 items
                 }
             }
@@ -222,7 +222,7 @@ public class StoreView {
 
             // product info (price and stock)
             JLabel textLabel = new JLabel(String.format("<html><p style=\"font-size:12px\">$%.2f<br>Stock: %d<br><br></p></html>",
-                                                            prod.getPrice(), inv.getProductQuantity(prod.getId())));
+                                                            prod.getPrice(), inv.getStock(prod.getId())));
             textLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
 
             // product image
@@ -273,7 +273,7 @@ public class StoreView {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 Object[] options1 = {"Checkout", "Continue Shopping", "Quit"};
-                int response1 = JOptionPane.showOptionDialog(null,
+                int response1 = JOptionPane.showOptionDialog(parentPanel,
                                 sm.stringCartItems(shoppingCart),
                                 "My Cart",
                                 JOptionPane.PLAIN_MESSAGE,
@@ -284,12 +284,12 @@ public class StoreView {
 
                 if(response1 == 0) {    // if user chooses to checkout
                     double checkoutTotal = 0.0;
-                    for (ProductStock item : shoppingCart.getProductStocks()) {
+                    for (ProductStock item : shoppingCart.getCartItems()) {
                         checkoutTotal += item.getQuantity() * item.getProduct().getPrice(); // get cart total
                     }
 
                     Object[] options2 = {"Yes", "No", "Quit"};
-                    int response2 = JOptionPane.showOptionDialog(null,
+                    int response2 = JOptionPane.showOptionDialog(parentPanel,
                             String.format("Your total is: $%.2f\nAre you ready to checkout?", checkoutTotal),
                             "Checkout",
                             JOptionPane.PLAIN_MESSAGE,
@@ -300,7 +300,7 @@ public class StoreView {
                     if(response2 == 0) {    // user confirmed checking out, disconnecting user
                         sm.processTransaction(shoppingCart, "Y");
                         Object[] options = {"OK"};
-                        int n = JOptionPane.showOptionDialog(null,
+                        int n = JOptionPane.showOptionDialog(frame,
                                 "Order confirmed! Curbside pickup will be ready within 15 mins.\n" +
                                         "Have a nice day :)",
                                 "See you soon!",
@@ -432,7 +432,7 @@ public class StoreView {
             System.out.println("-------------------- CHECKOUT --------------------");
             System.out.print(storeManager.stringCartItems(shoppingCart));
             double checkoutTotal = 0;
-            for (ProductStock item : shoppingCart.getProductStocks()) {
+            for (ProductStock item : shoppingCart.getCartItems()) {
                 checkoutTotal += item.getQuantity() * item.getProduct().getPrice();
             }
             System.out.println(String.format("Your total is: $%.2f\n", checkoutTotal));
