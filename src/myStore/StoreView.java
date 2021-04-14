@@ -40,8 +40,8 @@ public class StoreView {
      * @param sm StoreManager class instance
      * @return JFrame for main program
      */
-    private static JFrame initializeFrame(StoreManager sm) {
-        JFrame frame = new JFrame();
+    private static void initializeFrame(StoreManager sm, StoreView sv) {
+        frame = new JFrame();
         frame.setTitle("The Virtual Bakery");
         frame.setExtendedState(Frame.MAXIMIZED_BOTH); // make full screen
         frame.setResizable(false);
@@ -56,7 +56,15 @@ public class StoreView {
             }
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        return frame;
+        JPanel welcomePage = welcomePage();
+        JPanel mainPage = sv.mainPage(sm);     // GUI only supports one StoreView
+
+        parentPanel.add(welcomePage);
+        parentPanel.add(mainPage);
+
+        frame.add(parentPanel);
+        frame.pack();
+        frame.setVisible(true); // displays JFrame
     }
 
     /**
@@ -452,17 +460,7 @@ public class StoreView {
         StoreView sv2 = new StoreView(sm);
         StoreView sv3 = new StoreView(sm);
 
-        frame = initializeFrame(sm);
-
-        JPanel welcomePage = welcomePage();
-        JPanel mainPage = sv1.mainPage(sm);     // GUI only supports one StoreView
-
-        parentPanel.add(welcomePage);
-        parentPanel.add(mainPage);
-
-        frame.add(parentPanel);
-        frame.pack();
-        frame.setVisible(true); // displays JFrame
+        initializeFrame(sm, sv1);
 
         StoreView[] users = {sv1, sv2, sv3};
         int activeSV = users.length;
